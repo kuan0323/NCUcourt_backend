@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "@koa/cors": "^4.0.0",
+    "@koa/multer": "^3.0.2",
+    "dotenv": "^16.0.3",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.13.4",
+    "koa-body": "^4.2.0",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^12.0.0",
+    "koa-static": "^5.0.0",
+    "mongodb": "^3.5.9"
+  },
+  "name": "example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.9",
+    "@types/koa": "^2.13.5",
+    "@types/koa-bodyparser": "^4.3.10",
+    "@types/koa-router": "^7.4.4",
+    "@types/mongodb": "^3.6.20"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development ts-node-dev --transpile-only --respawn --inspect=4321 -- src/app.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
