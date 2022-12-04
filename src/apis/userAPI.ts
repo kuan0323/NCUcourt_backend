@@ -5,10 +5,10 @@ export default {
 
     async getUsers (ctx: Koa.Context) {
 
-        // const keyword = ctx.query.keyword;
-        // const keyword2 = ctx.query.keyword2;
+        const keyword = ctx.query.keyword;
+        const keyword2 = ctx.query.keyword2;
         const collection = await database.getCollection('users');
-        const users = await collection.find({}).toArray();
+        const users = await collection.find({"studentID" : keyword, "email" : keyword2}).toArray();
         // const users = await collection.find({"name" : keyword, "email" : keyword2}).toArray();
         ctx.body = users;
     },
@@ -23,11 +23,11 @@ export default {
         const status = ctx.request.body.status;
 
         // check if name is null
-        if (!name) {
-            ctx.response.status = 400;
-            ctx.body = {message : "name should be given"};
-            return;
-        }
+        // if (!name) {
+        //     ctx.response.status = 400;
+        //     ctx.body = {message : "name should be given"};
+        //     return;
+        // }
         // check email is already registered
         // if (typeof email !== 'undefined') {
         //     ctx.response.status = 400;
@@ -37,7 +37,7 @@ export default {
 
         // generate date&time
         ctx.request.body.createdTime = new Date();
-        const createdTime = ctx.request.body.createdTime
+        const createdTime = ctx.request.body.createdTime;
         const collection = await database.getCollection('users');
         const result = await collection.insertOne({name: name, studentID : studentID, email: email, password : password, phone : phone, status : status, createdTime : createdTime});
         
@@ -64,3 +64,10 @@ export default {
     // }
 
 }
+
+
+// HTTP request method
+// get 取得資料
+// post 新增資料
+// put 更新資料
+// delete 刪除資料

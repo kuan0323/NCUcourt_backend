@@ -2,6 +2,7 @@
 // import database from './database/mongoDatabase';
 
 // export default {
+       // get the messagesss of the court
 //     async getMessages (ctx: Koa.Context) {
 
 //     }
