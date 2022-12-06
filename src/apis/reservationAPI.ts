@@ -4,7 +4,12 @@ import database from './database/mongoDatabase';
 export default {
     // User can view records
     async getReservations (ctx: Koa.Context) {
-        ctx.body = {};
+        //const keyword = ctx.query.keyword;
+        const collection =  await database.getCollection('reservations');
+        const reservations = await collection.find({}).toArray();
+        //const reservations = await collection.find({ "reservation_studentID" : keyword }).toArray();
+
+        ctx.body = reservations;
     }
 
     // async createReservations (ctx: Koa.Context) {
