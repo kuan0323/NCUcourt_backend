@@ -2,7 +2,7 @@ import * as Router from 'koa-router';
 import reservationAPI from "./apis/reservationAPI";
 import userAPI from "./apis/userAPI";
 // import courtAPI from "./apis/courtAPI";
-// import adminAPI from "./apis/adminAPI";
+import adminAPI from "./apis/adminAPI";
 // import messageAPI from "./apis/messageAPI";
 
 export default (router: Router) => {
@@ -24,8 +24,8 @@ export default (router: Router) => {
     // router.put('/api/courts', courtAPI.editCourts);
     // router.delete('/api/courts', courtAPI.deleteCourts);
 
-    // router.get('/api/admins', adminAPI.getAdmins);
-    // router.post('/api/admins', adminAPI.createAdmins);
+    router.get('/api/admins', adminAPI.getAdmins);
+    router.post('/api/createdmins', adminAPI.createAdmins);
     // router.put('/api/admins', adminAPI.editAdmins);
     // router.delete('/api/admins', adminAPI.deleteAdmins);
 
@@ -42,4 +42,7 @@ export default (router: Router) => {
     // 1. query string
     // 2. path parameter
     // 3. post body
+    
+    //git commit -m "text"
+    //git push <rep> tj
 }
