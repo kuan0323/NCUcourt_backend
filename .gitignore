@@ -1,2 +1,11 @@
+<<<<<<< HEAD
 .env.development
 node_modules
+=======
+# ignore .env.development
+.env.development
+
+# ignore node-module directory
+node_modules/
+
+>>>>>>> 92b348e4323c5c6abb53bb266c44c5760995fcd4
