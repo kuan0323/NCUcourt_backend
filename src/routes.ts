@@ -3,7 +3,7 @@ import reservationAPI from "./apis/reservationAPI";
 import userAPI from "./apis/userAPI";
 // import courtAPI from "./apis/courtAPI";
 // import adminAPI from "./apis/adminAPI";
-// import messageAPI from "./apis/messageAPI";
+ import messageAPI from "./apis/messageAPI";
 
 export default (router: Router) => {
     router.get('/api/users', userAPI.getUsers);
@@ -29,8 +29,8 @@ export default (router: Router) => {
     // router.put('/api/admins', adminAPI.editAdmins);
     // router.delete('/api/admins', adminAPI.deleteAdmins);
 
-    // router.get('/api/messages', messageAPI.getMessages);
-    // router.post('/api/messages', messageAPI.createMessages);
+    router.get('/api/messages', messageAPI.getMessages);
+    router.post('/api/messages', messageAPI.createMessages);
     // router.put('/api/messages', messageAPI.editMessages);
     // router.delete('/api/messages', messageAPI.deleteMessages);
 

@@ -35,6 +35,10 @@ export class MongoDatabase {
     async getDB(): Promise<Db> {
         if (this._client === undefined || this._db === undefined) {
             const hidePwdMongoUrl = config.mongoUrl.replace(/(:\/\/).*:.*@/, '://user:pwd@');
+            //console.log(config.mongoUrl);
+
+            //console.log("test: "+hidePwdMongoUrl);
+            //const hidePwdMongoUrl = 'mongodb+srv://zeroan:O8aru2I0wdG6KO7K@cluster0.x0k1d8g.mongodb.net/?retryWrites=true&w=majority';
             try {
                 console.log(`[DB] try to connect to mongoDB: ${hidePwdMongoUrl}`);
                 this._client = await mongo.connect(config.mongoUrl, {useNewUrlParser: true, useUnifiedTopology: true});
