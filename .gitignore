@@ -2,4 +2,5 @@
 .env.development
 
 # ignore node-module directory
-node-modules/
+node_modules/
+
