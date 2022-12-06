@@ -2,6 +2,7 @@
   "dependencies": {
     "@koa/cors": "^4.0.0",
     "@koa/multer": "^3.0.2",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.4",
@@ -22,7 +23,7 @@
     "@types/mongodb": "^3.6.20"
   },
   "scripts": {
-    "dev": "NODE_ENV=development ts-node-dev --transpile-only --respawn --inspect=4321 -- src/app.ts"
+    "dev": "cross-env NODE_ENV=development ts-node-dev --transpile-only --respawn --inspect=4321 -- src/app.ts"
   },
   "author": "",
   "license": "ISC",
