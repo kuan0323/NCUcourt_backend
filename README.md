@@ -1,2 +1,2 @@
 ## HELLO
-* add message functions
+* add getMessages functions
