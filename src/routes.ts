@@ -5,7 +5,7 @@ import userAPI from "./apis/userAPI";
 import adminAPI from "./apis/adminAPI";
 // import messageAPI from "./apis/messageAPI";
 
-export default (router: Router) => {
+export default (router: Router) {
     router.get('/api/users', userAPI.getUsers);
     router.get('/api/users/:id', userAPI.getUsers);
     router.post('/api/register', userAPI.register);
