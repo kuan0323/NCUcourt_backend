@@ -1,5 +1,5 @@
 import * as Koa from 'koa';
-import database from './database/mongoDatabase';
+import database from '../database/mongoDatabase';
 
 export default {
 
