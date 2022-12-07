@@ -15,7 +15,7 @@ export default (router: Router) => {
     // router.delete('/api/Users', userAPI.deleteUsers);
 
     router.get('/api/reservations', reservationAPI.getReservations);
-    // router.post('/api/reservations', reservationAPI.createReservations);
+    router.post('/api/reservations', reservationAPI.createReservations);
     // router.put('/api/reservations', reservationAPI.editReservations);
     // router.delete('/api/reservations', reservationAPI.deleteReservations);
 
