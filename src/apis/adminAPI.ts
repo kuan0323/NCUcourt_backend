@@ -2,6 +2,9 @@
 // import database from './database/mongoDatabase';
 
 // export default {
+       // what superAdmin can do
+       // get all Admin
+       // get 
 //     async getAdmins (ctx: Koa.Context) {
         
 //     }

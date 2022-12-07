@@ -1,26 +1,26 @@
 import * as Koa from 'koa';
-import database from './database/mongoDatabase';
+import database from '../database/mongoDatabase';
 
 export default {
 
     async getUsers (ctx: Koa.Context) {
 
-        const keyword = ctx.query.keyword;
-        const keyword2 = ctx.query.keyword2;
+        // const keyword = ctx.query.keyword;
+        // const keyword2 = ctx.query.keyword2;
         const collection = await database.getCollection('users');
-        const users = await collection.find({"studentID" : keyword, "email" : keyword2}).toArray();
+        const users = await collection.find({}).toArray();
         // const users = await collection.find({"name" : keyword, "email" : keyword2}).toArray();
-        ctx.body = users;
+        ctx.body = {usersss : users};
     },
 
 
     async register (ctx: Koa.Context) {
-        const name = ctx.request.body.name;
-        const studentID = ctx.request.body.studentID;
-        const email = ctx.request.body.email;
-        const password = ctx.request.body.password;
-        const phone = ctx.request.body.phone;
-        const status = ctx.request.body.status;
+        const name = ctx.request.body.user_name;
+        const studentID = ctx.request.body.user_studentID;
+        const email = ctx.request.body.user_email;
+        const password = ctx.request.body.user_password;
+        const phone = ctx.request.body.user_phone;
+        const status = ctx.request.body.user_status;
 
         // check if name is null
         // if (!name) {
@@ -36,10 +36,10 @@ export default {
         // }
 
         // generate date&time
-        ctx.request.body.createdTime = new Date();
-        const createdTime = ctx.request.body.createdTime;
+        ctx.request.body.user_created_time = new Date();
+        const createdTime = ctx.request.body.user_createdcreated_time;
         const collection = await database.getCollection('users');
-        const result = await collection.insertOne({name: name, studentID : studentID, email: email, password : password, phone : phone, status : status, createdTime : createdTime});
+        const result = await collection.insertOne({user_name: name, user_studentID : studentID, user_email: email, user_password : password, user_phone : phone, user_status : status, user_created_time : createdTime});
         
         ctx.body = result.ops[0];
     },
