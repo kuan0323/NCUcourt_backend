@@ -22,7 +22,8 @@
     "@types/mongodb": "^3.6.20"
   },
   "scripts": {
-    "dev": "NODE_ENV=development ts-node-dev --transpile-only --respawn --inspect=4321 -- src/app.ts"
+    "dev": "NODE_ENV=development ts-node-dev --transpile-only --respawn --inspect=4321 -- src/app.ts",
+    "dev-win" : "cross-env NODE_ENV=development ts-node-dev --transpile-only --respawn --inspect=4321 -- src/app.ts"
   },
   "author": "",
   "license": "ISC",
