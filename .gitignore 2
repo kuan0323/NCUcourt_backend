@@ -1,0 +1,6 @@
+# ignore .env.development
+.env.development
+
+# ignore node-module directory
+node_modules/
+
