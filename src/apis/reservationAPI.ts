@@ -21,10 +21,15 @@ export default {
         const date = ctx.request.body.date;
         const time = ctx.request.body.time;
 
+        const collection = await database.getCollection('reservations');
+
+        let id = await collection.find().count();
+
         ctx.request.body.createdTime = new Date();
         const createdTime = ctx.request.body.createdTime;
-        const collection = await database.getCollection('reservations');
-        const result = await collection.insertOne({ reservation_court_name : court, reservation_studentID: student,
+
+        
+        const result = await collection.insertOne({ reservation_id: ++id, reservation_court_name : court, reservation_studentID: student,
          reservation_student_email: email, reservation_student_phone: phone, reservation_created_time: createdTime,
         reservation_date: date, reservation_time: time});
 
