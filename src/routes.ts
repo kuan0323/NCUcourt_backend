@@ -26,8 +26,8 @@ export default (router: Router) => {
 
     router.get('/api/getAdmins', adminAPI.getAdmins);
     router.post('/api/createAdmins', adminAPI.createAdmins);
-    // router.put('/api/admins', adminAPI.editAdmins);
-    // router.delete('/api/admins', adminAPI.deleteAdmins);
+    router.put('/api/editAdmins', adminAPI.editAdmins);
+    router.delete('/api/admins', adminAPI.deleteAdmins);
 
     // router.get('/api/messages', messageAPI.getMessages);
     // router.post('/api/messages', messageAPI.createMessages);
