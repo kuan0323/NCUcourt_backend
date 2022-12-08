@@ -13,7 +13,7 @@ export default (router: Router) {
     // router.get('/api/loginUsers', userAPI.loginUsers);
     // router.put('/api/Users', userAPI.editUsers);
     // router.delete('/api/Users', userAPI.deleteUsers);
-
+    
     router.get('/api/reservations', reservationAPI.getReservations);
     // router.post('/api/reservations', reservationAPI.createReservations);
     // router.put('/api/reservations', reservationAPI.editReservations);

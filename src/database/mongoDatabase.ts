@@ -1,6 +1,6 @@
 import * as mongodb from 'mongodb';
 import { Db, MongoClient } from "mongodb";
-import config from '../../config';
+import config from '../config';
 const mongo = mongodb.MongoClient;
 
 export class MongoDatabase {

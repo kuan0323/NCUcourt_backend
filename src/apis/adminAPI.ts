@@ -2,6 +2,7 @@ import * as Koa from 'koa';
 import database from './database/mongoDatabase';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 let count = 1;
 export default {
     async getAdmins (ctx: Koa.Context) {
@@ -28,6 +29,13 @@ export default {
 =======
 export default {
     // async getAdmins (ctx: Koa.Context) {
+=======
+// export default {
+       // what superAdmin can do
+       // get all Admin
+       // get 
+//     async getAdmins (ctx: Koa.Context) {
+>>>>>>> a641c76146a880b9544fcc36981953b1e751606d
         
     // }
 
