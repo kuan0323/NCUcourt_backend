@@ -3,11 +3,20 @@ import database from './database/mongoDatabase';
 
 export default{
     async getAdmins (ctx: Koa.Context) {
+        
         const name = ctx.query.name;
         const email = ctx.query.email;
         const collection = await database.getCollection('admins');
-        const users = await collection.find({"admin_name" : name, "admin_email" : email}).toArray();
-        ctx.body = users;
+        if ((await collection.find({ "admin_name": name }).toArray()).length === 0
+            || (await collection.find({ "admin_email": email }).toArray()).length === 0)
+            {
+                ctx.body = "Warning: Can't find the admin";
+            }
+        else{
+            const users = await collection.find({"admin_name" : name, "admin_email" : email}).toArray();
+            ctx.body = users;
+        } 
+        
     },
     
     async createAdmins (ctx: Koa.Context) {
@@ -52,7 +61,7 @@ export default{
                         $set: 
                         {
                             admin_email: email,
-                            admin_password: password,
+                            admin_password: password ,
                             admin_phone: phone,
                         },
                     }
@@ -66,15 +75,23 @@ export default{
         const name = ctx.query.name;
         const collection = await database.getCollection("admins");
 
-        if ((await collection.find({ court_name: name_keyword }).toArray()).length ===0)
+        if("admin0"==name)
         {
-          ctx.body = "Warning: Can't find the Admin!";
-        } 
-        else 
-        {
-          const deleting = await collection.deleteOne({ admin_name: name });
-          ctx.body = "The Admin was deleted";
+            ctx.body = "Warning: Can't delete admi0";
         }
+        else
+            {
+                if ((await collection.find({ admin_name: name }).toArray()).length ===0)
+                {
+                    ctx.body = "Warning: Can't find the Admin!";
+                } 
+                else 
+                {
+                    const deleting = await collection.deleteOne({ admin_name: name });
+                    ctx.body = "The Admin was deleted";
+                } 
+        }
+        
       }
 }
 
