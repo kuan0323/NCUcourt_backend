@@ -1,14 +1,7 @@
 import * as Koa from 'koa';
 import database from './database/mongoDatabase';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-let count = 1;
-export default {
-=======
 export default{
->>>>>>> tj
     async getAdmins (ctx: Koa.Context) {
         
         const name = ctx.query.name;
@@ -54,21 +47,6 @@ export default{
     
         const name = ctx.query.name;
         const collection = await database.getCollection('admins');
-<<<<<<< HEAD
-        const result = await collection.insertOne({admin_id:count,admin_name: name, admin_email: email, admin_password : password, admin_phone : phone, admin_created_Time : createdTime,admin_status : status});
-        ctx.body = result.ops[0];
-    }
-=======
-export default {
-    // async getAdmins (ctx: Koa.Context) {
-=======
-// export default {
-       // what superAdmin can do
-       // get all Admin
-       // get 
-//     async getAdmins (ctx: Koa.Context) {
->>>>>>> a641c76146a880b9544fcc36981953b1e751606d
-=======
           
         if ((await collection.find({ "admin_name": name }).toArray()).length === 0)
             {
@@ -113,7 +91,6 @@ export default {
                     ctx.body = "The Admin was deleted";
                 } 
         }
->>>>>>> tj
         
       }
 }
