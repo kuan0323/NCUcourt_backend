@@ -5,7 +5,7 @@ import userAPI from "./apis/userAPI";
 import adminAPI from "./apis/adminAPI";
 // import messageAPI from "./apis/messageAPI";
 
-export default (router: Router) {
+export default (router: Router) => {
     router.get('/api/users', userAPI.getUsers);
     router.get('/api/users/:id', userAPI.getUsers);
     router.post('/api/register', userAPI.register);
@@ -13,7 +13,7 @@ export default (router: Router) {
     // router.get('/api/loginUsers', userAPI.loginUsers);
     // router.put('/api/Users', userAPI.editUsers);
     // router.delete('/api/Users', userAPI.deleteUsers);
-    
+
     router.get('/api/reservations', reservationAPI.getReservations);
     // router.post('/api/reservations', reservationAPI.createReservations);
     // router.put('/api/reservations', reservationAPI.editReservations);
@@ -25,9 +25,9 @@ export default (router: Router) {
     // router.delete('/api/courts', courtAPI.deleteCourts);
 
     router.get('/api/admins', adminAPI.getAdmins);
-    router.post('/api/createdmins', adminAPI.createAdmins);
-    // router.put('/api/admins', adminAPI.editAdmins);
-    // router.delete('/api/admins', adminAPI.deleteAdmins);
+    router.post('/api/admins', adminAPI.createAdmins);
+    router.put('/api/admins', adminAPI.editAdmins);
+    router.delete('/api/admins', adminAPI.deleteAdmins);
 
     // router.get('/api/messages', messageAPI.getMessages);
     // router.post('/api/messages', messageAPI.createMessages);
