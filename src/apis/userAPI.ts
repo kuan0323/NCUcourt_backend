@@ -8,7 +8,7 @@ export default {
         // const keyword = ctx.query.keyword;
         // const keyword2 = ctx.query.keyword2;
         const collection = await database.getCollection('users');
-        const users = await collection.find({"user_studentID" : keyword, "user_email" : keyword2}).toArray();
+        // const users = await collection.find({"user_studentID" : keyword, "user_email" : keyword2}).toArray();
 
         const users = await collection.find({}).toArray();
         // const users = await collection.find({"name" : keyword, "email" : keyword2}).toArray();
