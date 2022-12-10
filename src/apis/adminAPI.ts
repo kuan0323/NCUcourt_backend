@@ -1,9 +1,9 @@
 import * as Koa from 'koa';
-import database from './database/mongoDatabase';
+import database from '../database/mongoDatabase';
 
 export default{
     async getAdmins (ctx: Koa.Context) {
-        
+
         const name = ctx.query.name;
         const email = ctx.query.email;
         const collection = await database.getCollection('admins');
@@ -13,10 +13,10 @@ export default{
                 ctx.body = "Warning: Can't find the admin";
             }
         else{
-            const users = await collection.find({"admin_name" : name, "admin_email" : email}).toArray();
-            ctx.body = users;
-        } 
-        
+        const users = await collection.find({"admin_name" : name, "admin_email" : email}).toArray();
+        ctx.body = users;
+        }
+
     },
     
     async createAdmins (ctx: Koa.Context) {
@@ -26,7 +26,7 @@ export default{
         const password = ctx.request.body.password;
         const phone = ctx.request.body.phone;
         const status = true;
-
+        
         if((await collection.find({"admin_name" : name}).toArray()).length===1
             || (await collection.find({"admin_email" : email}).toArray()).length===1)
         {
@@ -44,7 +44,7 @@ export default{
         const email = ctx.request.body.email;
         const password = ctx.request.body.password;
         const phone = ctx.request.body.phone;
-    
+
         const name = ctx.query.name;
         const collection = await database.getCollection('admins');
           
@@ -69,8 +69,8 @@ export default{
           ctx.body = await collection.find({ "admin_name": name }).toArray();
         }
       },
-    
-    async deleteAdmins(ctx: Koa.Context) 
+
+      async deleteAdmins(ctx: Koa.Context) 
     {
         const name = ctx.query.name;
         const collection = await database.getCollection("admins");
@@ -95,7 +95,6 @@ export default{
       }
 }
 
-
-/** 
-* Paste one or more documents here
-*/
+        
+    //最後一筆資料
+    //const last =await collection.find({}).sort({_id:-1}).limit(1).toArray();
