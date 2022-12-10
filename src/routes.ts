@@ -31,8 +31,8 @@ export default (router: Router) => {
 
     router.get('/api/messages', messageAPI.getMessages);
     router.post('/api/messages', messageAPI.createMessages);
-    // router.put('/api/messages', messageAPI.editMessages);
-    // router.delete('/api/messages', messageAPI.deleteMessages);
+    router.put('/api/messages', messageAPI.editMessages);
+    router.delete('/api/messages', messageAPI.deleteMessages);
 
     // post
     // put
