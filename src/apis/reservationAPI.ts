@@ -9,16 +9,16 @@ export default {
         
         const collection =  await database.getCollection('reservations');
         //const reservations = await collection.find({}).toArray();
-        const reservations = await collection.find({ "reservation_date" : input_date , "reservation_time" : input_time }).toArray();
+        const reservations = await collection.find({ "date" : input_date , "time" : input_time }).toArray();
 
         ctx.body = reservations;
     },
 
     async createReservations (ctx: Koa.Context) {
         const court = ctx.request.body.court;
-        const student = ctx.request.body.student;
-        const email = ctx.request.body.email;
-        const phone = ctx.request.body.phone;
+        const studentId = ctx.request.body.userStudentId;
+        const email = ctx.request.body.userEmail;
+        const phone = ctx.request.body.userPhone;
         const date = ctx.request.body.date;
         const time = ctx.request.body.time;
 
@@ -31,16 +31,16 @@ export default {
         
         if( 
             (await collection.find({ 
-                reservation_court_name: court,
-                reservation_date: date,
-                reservation_time: time,
+                courtName: court,
+                date: date,
+                time: time,
             }).toArray()).length === 0
         ){
         const result = await collection.insertOne({
             courtName : court, 
-            studentId: student,
-            studentEmail: email, 
-            studentPhone: phone, 
+            studentId: studentId,
+            userEmail: email, 
+            userPhone: phone, 
             createdTime: createdTime,
             date: date,
             time: time
@@ -52,50 +52,51 @@ export default {
 
     async editReservations (ctx: Koa.Context) {
         
-        const student = ctx.request.body.student;
-        const email = ctx.request.body.email;
-        const phone = ctx.request.body.phone;
+        const studentId = ctx.request.body.studentId;
+        const email = ctx.request.body.userEmail;
+        const phone = ctx.request.body.userPhone;
         const date = ctx.request.body.date;
         const time = ctx.request.body.time;
 
-        const id_keyword = ctx.request.body.id_keyword;
+        const courtName = ctx.request.body.courtName;
 
         const collection = await database.getCollection("reservations");
 
         if (
-            (await collection.find({ reservation_id: id_keyword }).toArray()).length ===0
+            (await collection.find({ courtName: courtName }).toArray()).length ===0
         ) {
             ctx.body = "Warning: Can't find the reservation!";
         } 
         else {
-            const courts = await collection.updateOne(
-            { reservation_id: id_keyword },
+            await collection.updateOne(
+            { courtName: courtName },
             {
                 $set: {
-                    reservation_studentID: student,
-                    reservation_student_email: email, 
-                    reservation_student_phone: phone, 
-                    reservation_date: date, reservation_time: time,
+                    userStudentID: studentId,
+                    userEmail: email, 
+                    userPhone: phone, 
+                    date: date,
+                    time: time,
                 },
             }
             );
-            ctx.body = await collection.find({ reservation_id: id_keyword }).toArray();
+            ctx.body = await collection.find({ courtName: courtName }).toArray();
         }
 
     },
 
     async deleteReservations (ctx: Koa.Context) {
     
-        const id_keyword = ctx.request.body.id_keyword;
+        const courtName = ctx.request.body.courtName;
         const collection = await database.getCollection("reservations");
 
         if (
-            (await collection.find({ reservation_id: id_keyword }).toArray()).length ===
+            (await collection.find({ courtName: courtName }).toArray()).length ===
             0
         ) {
             ctx.body = "Warning: Can't find the reservation!";
         } else {
-            const deleting = await collection.deleteOne({ reservation_id: id_keyword });
+            await collection.deleteOne({ courtName: courtName });
             ctx.body = "The reservation had been deleted";
         }
 
