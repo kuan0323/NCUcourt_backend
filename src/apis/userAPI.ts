@@ -12,10 +12,8 @@ export default {
 
         const users = await collection.find({}).toArray();
         // const users = await collection.find({"name" : keyword, "email" : keyword2}).toArray();
-        ctx.body = {usersss : users};
+        ctx.body = users;
     },
-
-
     async register (ctx: Koa.Context) {
         const name = ctx.request.body.user_name;
         const studentID = ctx.request.body.user_studentID;

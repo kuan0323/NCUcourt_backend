@@ -3,8 +3,8 @@ import reservationAPI from "./apis/reservationAPI";
 import authAPI from "./apis/authAPI";
 import userAPI from "./apis/userAPI";
 // import courtAPI from "./apis/courtAPI";
-import adminAPI from "./apis/adminAPI";
 // import messageAPI from "./apis/messageAPI";
+// import adminAPI from "./apis/adminAPI";
 
 export default (router: Router) => {
     router.post('/api/auth/login', authAPI.login);

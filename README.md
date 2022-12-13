@@ -6,4 +6,3 @@
    - superadmin 可以新增、刪除、修改、查詢所有 admin
    - admin collection 的 status：true -> 是一般校隊隊長 / false -> 是 superAdmin
    - user collection 的 status：true -> 可預約場地 / false -> 不可預約場地（被停權）
-   
