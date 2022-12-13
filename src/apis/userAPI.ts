@@ -15,12 +15,11 @@ export default {
         ctx.body = users;
     },
     async register (ctx: Koa.Context) {
-        const name = ctx.request.body.user_name;
-        const studentID = ctx.request.body.user_studentID;
-        const email = ctx.request.body.user_email;
-        const password = ctx.request.body.user_password;
-        const phone = ctx.request.body.user_phone;
-        const status = ctx.request.body.user_status;
+        const name = ctx.request.body.name;
+        const studentId = ctx.request.body.studentId;
+        const email = ctx.request.body.email;
+        const password = ctx.request.body.password;
+        const phone = ctx.request.body.phone;
 
         // check if name is null
         // if (!name) {
@@ -36,24 +35,13 @@ export default {
         // }
 
         // generate date&time
-        ctx.request.body.user_created_time = new Date();
-        const createdTime = ctx.request.body.user_createdcreated_time;
+        ctx.request.body.createdTime = new Date();
+        const createdTime = ctx.request.body.createdTime;
         const collection = await database.getCollection('users');
-        const result = await collection.insertOne({user_name: name, user_studentID : studentID, user_email: email, user_password : password, user_phone : phone, user_status : status, user_created_time : createdTime});
+        const result = await collection.insertOne({name: name, studentId : studentId, email: email, password : password, phone : phone, createdTime : createdTime, role: "user"});
         
         ctx.body = result.ops[0];
     },
-
-    async loginUsers (ctx: Koa.Context) {
-        const email = ctx.query.keyword1;
-        const password = ctx.query.keyword2;
-
-        const collection = await database.getCollection('users');
-        const users = await collection.find({"name" : email, "email" : password}).toArray();
-
-        ctx.body = users;
-
-    }
 
     // async deleteUsers (ctx: Koa.Context) { 
 

@@ -4,15 +4,15 @@ import authAPI from "./apis/authAPI";
 import userAPI from "./apis/userAPI";
 // import courtAPI from "./apis/courtAPI";
 // import messageAPI from "./apis/messageAPI";
-// import adminAPI from "./apis/adminAPI";
+import adminAPI from "./apis/adminAPI";
 
 export default (router: Router) => {
     router.post('/api/auth/login', authAPI.login);
 
     router.get('/api/users', authAPI.verifyServiceToken, userAPI.getUsers);
     router.get('/api/users/:id', userAPI.getUsers);
-    router.post('/api/register', authAPI.verifyServiceToken, userAPI.register);
-
+    // router.post('/api/register', authAPI.verifyServiceToken, userAPI.register);
+    router.post('/api/users', userAPI.register);
     // router.get('/api/loginUsers', userAPI.loginUsers);
     // router.put('/api/users', authAPI.verifyServiceToken, userAPI.editUsers);
     // router.delete('/api/users', authAPI.verifyServiceToken, userAPI.deleteUsers);
