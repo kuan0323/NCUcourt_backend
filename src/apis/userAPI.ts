@@ -1,5 +1,6 @@
 import * as Koa from 'koa';
 import database from '../database/mongoDatabase';
+const hashMethod = require('crypto');
 
 export default {
 
@@ -21,6 +22,10 @@ export default {
         const password = ctx.request.body.password;
         const phone = ctx.request.body.phone;
 
+        const hashPwd = hashMethod.createHash('sha256')
+        .update(password)
+        .digest('hex');
+
         // check if name is null
         // if (!name) {
         //     ctx.response.status = 400;
@@ -38,7 +43,7 @@ export default {
         ctx.request.body.createdTime = new Date();
         const createdTime = ctx.request.body.createdTime;
         const collection = await database.getCollection('users');
-        const result = await collection.insertOne({name: name, studentId : studentId, email: email, password : password, phone : phone, createdTime : createdTime, role: "user"});
+        const result = await collection.insertOne({name: name, studentId : studentId, email: email, password : hashPwd, phone : phone, createdTime : createdTime, role: "user"});
         
         ctx.body = result.ops[0];
     },
