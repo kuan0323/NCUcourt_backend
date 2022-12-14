@@ -16,12 +16,17 @@ export default {
 
         // verify password
         // If password not correct
-        if (password !== user.password) {
+        const hashMethod = require('crypto');
+        const hashPwd = hashMethod.createHash('sha256')
+        .update(password)
+        .digest('hex');
+
+        if (hashPwd !== user.password) {
             ctx.response.status = 401;
             ctx.body = { message: 'login failed' };
             return;
         }
-
+        
         const payload = { userId: user._id, signTimestamp: Date.now() };
         // const options = { algorithm: 'HS256' as Algorithm, expiresIn: '30d' };
         const options = { algorithm: 'HS256' as Algorithm };
