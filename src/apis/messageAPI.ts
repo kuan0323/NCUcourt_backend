@@ -35,7 +35,7 @@ export default {
               } else {
                      await collection.updateOne({"messageId" : message_id},{
                             $set:{
-                            messageContent : content,
+                                   messageContent : content,
                             },
                      });
                      ctx.body = await collection.find({ "messageId" : message_id }).toArray();
