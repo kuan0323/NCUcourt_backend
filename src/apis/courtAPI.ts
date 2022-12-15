@@ -10,7 +10,6 @@ export default {
               //const courts = await collection.find({ type: type }).toArray();
               const courts = await collection.find({}).toArray();
 
-
               ctx.body = courts;
        },
        async createCourts(ctx: Koa.Context) {
