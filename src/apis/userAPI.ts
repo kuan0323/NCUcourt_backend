@@ -37,7 +37,7 @@ export default {
         ctx.request.body.createdTime = new Date();
         const createdTime = ctx.request.body.createdTime;
         const collection = await database.getCollection('users');
-        const result = await collection.insertOne({name: name, studentId : studentId, email: email, password : hashPwd, phone : phone, createdTime : createdTime, role: "user"});
+        const result = await collection.insertOne({name: name, studentId : studentId, email: email, password : hashPwd, phone : phone, createdTime : createdTime, role: "regular"});
         
         ctx.body = result.ops[0];
     },
@@ -72,9 +72,18 @@ export default {
 
     },
 
-    // async deleteUsers (ctx: Koa.Context) { 
+    async deleteUsers (ctx: Koa.Context) { 
+        const name = ctx.query.name;
+        const collection = await database.getCollection("users");
 
-    // }
+        //check if the target exist
+        if ((await collection.find({ name: name }).toArray()).length ===0) {
+            ctx.body = "Warning: Can't find the user!";
+        } else {
+            await collection.deleteOne({ name: name });
+            ctx.body = "The user had been deleted";
+        }
+    }
 
 
 
