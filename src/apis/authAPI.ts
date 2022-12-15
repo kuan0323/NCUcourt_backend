@@ -5,7 +5,7 @@ import database from '../database/mongoDatabase';
 import config from '../config';
 
 export default {
-
+    
     async login (ctx: Koa.Context) {
         const studentId = ctx.request.body.studentId;
         const password = ctx.request.body.password;

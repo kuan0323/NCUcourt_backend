@@ -47,7 +47,7 @@ export default{
 
         const name = ctx.query.name;
         const collection = await database.getCollection('admins');
-          
+        
         if ((await collection.find({ "admin_name": name }).toArray()).length === 0)
             {
                 ctx.body = "Warning: Can't find the admin!";
@@ -66,11 +66,11 @@ export default{
                         },
                     }
                 );
-          ctx.body = await collection.find({ "admin_name": name }).toArray();
+            ctx.body = await collection.find({ "admin_name": name }).toArray();
         }
-      },
+    },
 
-      async deleteAdmins(ctx: Koa.Context) 
+    async deleteAdmins(ctx: Koa.Context) 
     {
         const name = ctx.query.name;
         const collection = await database.getCollection("admins");

@@ -4,21 +4,22 @@ import database from '../database/mongoDatabase';
 export default {
     // User can view records
     async getReservations (ctx: Koa.Context) {
-        const input_date = ctx.query.keyword1;
-        const input_time = ctx.query.keyword2;
+        //const input_date = ctx.query.keyword1;
+        //const input_time = ctx.query.keyword2;
         
         const collection =  await database.getCollection('reservations');
-        //const reservations = await collection.find({}).toArray();
-        const reservations = await collection.find({ "date" : input_date , "time" : input_time }).toArray();
+        const reservations = await collection.find({}).toArray();
+        //const reservations = await collection.find({ "date" : input_date , "time" : input_time }).toArray();
 
         ctx.body = reservations;
     },
 
     async createReservations (ctx: Koa.Context) {
-        const court = ctx.request.body.court;
-        const studentId = ctx.request.body.userStudentId;
-        const email = ctx.request.body.userEmail;
-        const phone = ctx.request.body.userPhone;
+
+        const courtName = ctx.request.body.courtName;
+        const studentId = ctx.request.body.StudentId;
+        const studentEmail = ctx.request.body.studentEmail;
+        const studentPhone = ctx.request.body.studentPhone;
         const date = ctx.request.body.date;
         const time = ctx.request.body.time;
 
@@ -31,16 +32,16 @@ export default {
         
         if( 
             (await collection.find({ 
-                courtName: court,
+                courtName: courtName,
                 date: date,
                 time: time,
             }).toArray()).length === 0
         ){
         const result = await collection.insertOne({
-            courtName : court, 
+            courtName : courtName, 
             studentId: studentId,
-            userEmail: email, 
-            userPhone: phone, 
+            studentEmail: studentEmail, 
+            studentPhone: studentPhone, 
             createdTime: createdTime,
             date: date,
             time: time
@@ -52,18 +53,18 @@ export default {
 
     async editReservations (ctx: Koa.Context) {
         
+        const courtName = ctx.request.body.courtName;
         const studentId = ctx.request.body.studentId;
-        const email = ctx.request.body.userEmail;
-        const phone = ctx.request.body.userPhone;
+        const studentEmail = ctx.request.body.studentEmail;
+        const studentPhone = ctx.request.body.studentPhone;
         const date = ctx.request.body.date;
         const time = ctx.request.body.time;
-
-        const courtName = ctx.request.body.courtName;
+        
 
         const collection = await database.getCollection("reservations");
 
         if (
-            (await collection.find({ courtName: courtName }).toArray()).length ===0
+            (await collection.find({ courtName: courtName }).toArray()).length === 0
         ) {
             ctx.body = "Warning: Can't find the reservation!";
         } 
@@ -72,9 +73,9 @@ export default {
             { courtName: courtName },
             {
                 $set: {
-                    userStudentID: studentId,
-                    userEmail: email, 
-                    userPhone: phone, 
+                    studentId: studentId,
+                    studentEmail: studentEmail, 
+                    studentPhone: studentPhone, 
                     date: date,
                     time: time,
                 },
@@ -91,8 +92,7 @@ export default {
         const collection = await database.getCollection("reservations");
 
         if (
-            (await collection.find({ courtName: courtName }).toArray()).length ===
-            0
+            (await collection.find({ courtName: courtName }).toArray()).length === 0
         ) {
             ctx.body = "Warning: Can't find the reservation!";
         } else {
