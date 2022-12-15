@@ -47,13 +47,41 @@ export default {
         ctx.body = result.ops[0];
     },
 
+    async editUsers (ctx: Koa.Context) {
+        const studentId = ctx.request.body.studentId;
+        const email = ctx.request.body.email;
+        const password = ctx.request.body.password;
+        const phone = ctx.request.body.phone;
+
+        const name = ctx.request.body.name;
+        const collection = await database.getCollection("users");
+        
+        //hash password 
+        const hashPwd = hashMethod.createHash('sha256')
+        .update(password)
+        .digest('hex');
+        
+        if ((await collection.find({ name: name }).toArray()).length ===0) {
+            ctx.body = "Warning: Can't find the user!";
+        } else {
+            await collection.updateOne({ name: name },{
+                $set: {
+                    studentId: studentId,
+                    email: email,
+                    password : hashPwd,
+                    phone: phone,
+                },
+            });
+            ctx.body = await collection.find({ name: name }).toArray();
+        } 
+
+    },
+
     // async deleteUsers (ctx: Koa.Context) { 
 
     // }
 
-    // async editUsers (ctx: Koa.Context) {
 
-    // }
 
 }
 

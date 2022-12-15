@@ -14,7 +14,7 @@ export default (router: Router) => {
     // router.post('/api/register', authAPI.verifyServiceToken, userAPI.register);
     router.post('/api/users', userAPI.register);
     // router.get('/api/loginUsers', userAPI.loginUsers);
-    // router.put('/api/users', authAPI.verifyServiceToken, userAPI.editUsers);
+    router.put('/api/users', authAPI.verifyServiceToken, userAPI.editUsers);
     // router.delete('/api/users', authAPI.verifyServiceToken, userAPI.deleteUsers);
 
 
