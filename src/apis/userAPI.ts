@@ -5,12 +5,7 @@ const hashMethod = require('crypto');
 export default {
 
     async getUsers (ctx: Koa.Context) {
-
-        //const keyword = ctx.query.keyword;
-        //const keyword2 = ctx.query.keyword2;
         const collection = await database.getCollection('users');
-        //const users = await collection.find({"studentId" : keyword, "studentEmail" : keyword2}).toArray();
-
         const users = await collection.find({}).toArray();
         ctx.body = users;
     },
