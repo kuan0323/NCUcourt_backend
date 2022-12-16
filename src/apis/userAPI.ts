@@ -7,20 +7,29 @@ export default {
     async getUsers (ctx: Koa.Context) {
 
         const sortby = ctx.request.body.sortby;
+        const role = ctx.request.body.role;
         const collection = await database.getCollection('users');
 
         if (sortby === "createdTime"){
             const users = await collection.find({}).sort({createdTime : -1}).toArray();
             ctx.body = users;
         }else if (sortby === "lastModified"){
-                const users = await collection.find({ lastModified: { $exists: true }}).sort({ lastModified : -1}).toArray();
-                ctx.body = users;  
+            const users = await collection.find({ lastModified: { $exists: true }}).sort({ lastModified : -1}).toArray();
+            ctx.body = users;  
         }else if (sortby === "specificName"){
             const name =  ctx.request.body.name;
             const users = await collection.find({ name : name }).toArray();
             ctx.body = users;
         }
-        
+
+        if ( role != "regular" && role != "admin" && role != "superadmin") {
+            ctx.body = " No such identity, please re-enter.... ";
+        }else {
+            const users = await collection.find({ role : role }).toArray();
+            ctx.body = users;
+        } 
+    
+
     },
 
     async register (ctx: Koa.Context) {
@@ -29,6 +38,7 @@ export default {
         const email = ctx.request.body.email;
         const password = ctx.request.body.password;
         const phone = ctx.request.body.phone;
+        const role = ctx.request.body.role;
 
         const hashPwd = hashMethod.createHash('sha256')
         .update(password)
@@ -50,10 +60,19 @@ export default {
         // generate date&time
         ctx.request.body.createdTime = new Date();
         const createdTime = ctx.request.body.createdTime;
+
         const collection = await database.getCollection('users');
-        const result = await collection.insertOne({name: name, studentId : studentId, email: email, password : hashPwd, phone : phone, createdTime : createdTime, role: "regular"});
+
+        if ( role != "regular" && role != "admin" && role != "superadmin") {
+            ctx.body = " No such identity, please re-enter.... ";
+        }else if ( (await collection.find({ studentId: studentId }).toArray()).length ===0){
+            const result = await collection.insertOne({name: name, studentId : studentId, email: email, password : hashPwd, phone : phone, createdTime : createdTime, role: role});
+            ctx.body = result.ops[0];
+        }else {
+            ctx.body = "This studentId is registered";
+        }
         
-        ctx.body = result.ops[0];
+        
     },
 
     async editUsers (ctx: Koa.Context) {
