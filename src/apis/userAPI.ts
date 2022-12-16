@@ -5,9 +5,19 @@ const hashMethod = require('crypto');
 export default {
 
     async getUsers (ctx: Koa.Context) {
+        const sortby = ctx.request.body.sortby;
         const collection = await database.getCollection('users');
-        const users = await collection.find({}).sort({createdTime : -1}).toArray();
-        ctx.body = users;
+        if(sortby === "createdTime"){
+            const users = await collection.find({}).sort({createdTime : -1}).toArray();
+            ctx.body = users;
+        }else if(sortby === "lastModified"){
+                const users = await collection.find({ lastModified: { $exists: true }}).sort({ lastModified : -1}).toArray();
+                ctx.body = users;  
+        }else if(sortby === "specificName"){
+            const name =  ctx.request.body.name;
+            const users = await collection.find({ name : name }).toArray();
+            ctx.body = users;
+        }
     },
 
     async register (ctx: Koa.Context) {
