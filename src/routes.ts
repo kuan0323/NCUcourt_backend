@@ -10,7 +10,7 @@ export default (router: Router) => {
     router.post('/api/auth/login', authAPI.login);
 
     router.get('/api/users', authAPI.verifyServiceToken, userAPI.getUsers);
-    router.get('/api/users/:id', userAPI.getUsers);
+    router.get('/api/users/:name', userAPI.getUsers);
     // router.post('/api/register', authAPI.verifyServiceToken, userAPI.register);
     router.post('/api/users', userAPI.register);
     // router.get('/api/loginUsers', userAPI.loginUsers);

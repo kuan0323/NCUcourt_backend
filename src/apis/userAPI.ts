@@ -31,7 +31,6 @@ export default {
     
 
     },
-
     async register (ctx: Koa.Context) {
         const name = ctx.request.body.name;
         const studentId = ctx.request.body.studentId;
@@ -120,6 +119,8 @@ export default {
             ctx.body = "The user had been deleted";
         }
     }
+
+
 
 }
 
