@@ -50,6 +50,8 @@ export default {
         const phone = ctx.request.body.phone;
 
         const name = ctx.request.body.name;
+        ctx.request.body.lastModified = new Date();
+        const lastModified = ctx.request.body.lastModified;
         const collection = await database.getCollection("users");
         
         //hash password 
@@ -66,6 +68,7 @@ export default {
                     email: email,
                     password : hashPwd,
                     phone: phone,
+                    lastModified: lastModified,
                 },
             });
             ctx.body = await collection.find({ name: name }).toArray();
