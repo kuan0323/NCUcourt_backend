@@ -8,13 +8,13 @@ export default {
         const studentId = ctx.request.body.studentId;
         const collection =  await database.getCollection('reservations');
 
-        if(studentId === undefined){
+        if (studentId === undefined) {
             ctx.body = "please enter your studentId";
-        }else{
-            const reservations = await collection.find({ studentId : studentId }).sort({createdTime : -1}).toArray();
+        }else {
+            const reservations = await collection.find({ studentId: studentId }).sort({createdTime : -1}).toArray();
             ctx.body = reservations;
         }  
-        
+
     },
 
     async createReservations (ctx: Koa.Context) {
