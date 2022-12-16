@@ -6,9 +6,10 @@ export default {
 
     async getUsers (ctx: Koa.Context) {
         const collection = await database.getCollection('users');
-        const users = await collection.find({}).toArray();
+        const users = await collection.find({}).sort({createdTime : -1}).toArray();
         ctx.body = users;
     },
+
     async register (ctx: Koa.Context) {
         const name = ctx.request.body.name;
         const studentId = ctx.request.body.studentId;
@@ -84,8 +85,6 @@ export default {
             ctx.body = "The user had been deleted";
         }
     }
-
-
 
 }
 
