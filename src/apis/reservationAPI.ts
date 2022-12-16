@@ -4,20 +4,23 @@ import database from '../database/mongoDatabase';
 export default {
     // User can view records
     async getReservations (ctx: Koa.Context) {
-        //const input_date = ctx.query.keyword1;
-        //const input_time = ctx.query.keyword2;
-        
-        const collection =  await database.getCollection('reservations');
-        const reservations = await collection.find({}).toArray();
-        //const reservations = await collection.find({ "date" : input_date , "time" : input_time }).toArray();
 
-        ctx.body = reservations;
+        const studentId = ctx.request.body.studentId;
+        const collection =  await database.getCollection('reservations');
+
+        if(studentId === undefined){
+            ctx.body = "please enter your studentId";
+        }else{
+            const reservations = await collection.find({ studentId : studentId }).sort({createdTime : -1}).toArray();
+            ctx.body = reservations;
+        }  
+        
     },
 
     async createReservations (ctx: Koa.Context) {
 
         const courtName = ctx.request.body.courtName;
-        const studentId = ctx.request.body.StudentId;
+        const studentId = ctx.request.body.studentId;
         const studentEmail = ctx.request.body.studentEmail;
         const studentPhone = ctx.request.body.studentPhone;
         const date = ctx.request.body.date;
