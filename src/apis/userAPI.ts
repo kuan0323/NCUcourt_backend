@@ -43,7 +43,7 @@ export default {
         const email = ctx.request.body.email;
         const password = ctx.request.body.password;
         const phone = ctx.request.body.phone;
-        const role = ctx.request.body.role;
+        const role = "regular";
 
         const hashPwd = hashMethod.createHash('sha256')
         .update(password)
@@ -68,9 +68,7 @@ export default {
 
         const collection = await database.getCollection('users');
 
-        if ( role != "regular" && role != "admin" && role != "superadmin") {
-            ctx.body = " No such identity, please re-enter.... ";
-        }else if ( (await collection.find({ studentId: studentId }).toArray()).length ===0){
+        if ( (await collection.find({ studentId: studentId }).toArray()).length ===0){
             const result = await collection.insertOne({name: name, studentId : studentId, email: email, password : hashPwd, phone : phone, createdTime : createdTime, role: role});
             ctx.body = result.ops[0];
         }else {
