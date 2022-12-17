@@ -72,7 +72,7 @@ export default {
             const result = await collection.insertOne({name: name, studentId : studentId, email: email, password : hashPwd, phone : phone, createdTime : createdTime, role: role});
             ctx.body = result.ops[0];
         }else {
-            ctx.body = "This studentId is registered";
+            ctx.body = "This studentId was been register";
         }
         
         
@@ -81,7 +81,8 @@ export default {
     async editUsers (ctx: Koa.Context) {
         const studentId = ctx.request.body.studentId;
         const email = ctx.request.body.email;
-        const password = ctx.request.body.password;
+        const oldPassword = ctx.request.body.oldPassword;
+        const newPassword = ctx.request.body.newPassword;
         const phone = ctx.request.body.phone;
 
         const name = ctx.request.body.name;
@@ -89,14 +90,21 @@ export default {
         const lastModified = ctx.request.body.lastModified;
         const collection = await database.getCollection("users");
         
-        //hash password 
+        //hash newPassword 
         const hashPwd = hashMethod.createHash('sha256')
-        .update(password)
+        .update(newPassword)
+        .digest('hex');
+
+        //hash oldpassword 
+        const hashOldPwd = hashMethod.createHash('sha256')
+        .update(oldPassword)
         .digest('hex');
         
         if ((await collection.find({ name: name }).toArray()).length ===0) {
             ctx.body = "Warning: Can't find the user!";
-        } else {
+        } else if((await collection.find({ password: hashOldPwd ,name : name}).toArray()).length ===0){
+            ctx.body = "your old password is incorrect, please try again";
+        } else if ( (await collection.find({ studentId: studentId }).toArray()).length ===0){
             await collection.updateOne({ name: name },{
                 $set: {
                     studentId: studentId,
@@ -107,7 +115,10 @@ export default {
                 },
             });
             ctx.body = await collection.find({ name: name }).toArray();
-        } 
+        } else {
+            ctx.body = "This studentId was been register";
+        }
+
 
     },
 
