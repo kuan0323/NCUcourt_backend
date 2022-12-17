@@ -4,7 +4,7 @@ import authAPI from "./apis/authAPI";
 import userAPI from "./apis/userAPI";
 import courtAPI from "./apis/courtAPI";
 import messageAPI from "./apis/messageAPI";
-import adminAPI from "./apis/adminAPI";
+
 
 export default (router: Router) => {
     router.post('/api/auth/login', authAPI.login);
@@ -27,11 +27,6 @@ export default (router: Router) => {
     router.post('/api/courts', authAPI.verifyServiceToken, courtAPI.createCourts);
     router.put('/api/courts', authAPI.verifyServiceToken, courtAPI.editCourts);
     router.delete('/api/courts', authAPI.verifyServiceToken, courtAPI.deleteCourts);
-
-    router.get('/api/admins', authAPI.verifyServiceToken, adminAPI.getAdmins);
-    router.post('/api/admins', authAPI.verifyServiceToken, adminAPI.createAdmins);
-    router.put('/api/admins', authAPI.verifyServiceToken, adminAPI.editAdmins);
-    router.delete('/api/admins', authAPI.verifyServiceToken, adminAPI.deleteAdmins);
 
     router.get('/api/messages', authAPI.verifyServiceToken, messageAPI.getMessages);
     router.post('/api/messages', authAPI.verifyServiceToken, messageAPI.createMessages);

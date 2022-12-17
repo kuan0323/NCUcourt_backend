@@ -5,9 +5,8 @@ const hashMethod = require('crypto');
 export default {
 
     async getUsers (ctx: Koa.Context) {
-
-        const sortby = ctx.request.body.sortby;
-        const role = ctx.request.body.role;
+        const sortby = ctx.query.sortby;
+        const role = ctx.query.role;
         const collection = await database.getCollection('users');
 
         if (sortby === "createdTime"){
@@ -21,7 +20,6 @@ export default {
             const users = await collection.find({ name : name }).toArray();
             ctx.body = users;
         }
-
         if ( role != "regular" && role != "admin" && role != "superadmin") {
             ctx.body = " No such identity, please re-enter.... ";
         }else {
@@ -108,14 +106,15 @@ export default {
     },
 
     async deleteUsers (ctx: Koa.Context) { 
-        const name = ctx.query.name;
+        const userId = ctx.state.user;
+        console.log(userId);
         const collection = await database.getCollection("users");
 
-        //check if the target exist
-        if ((await collection.find({ name: name }).toArray()).length ===0) {
+        // check if the target exist
+        if ((await collection.find({ _id: userId }).toArray()).length ===0) {
             ctx.body = "Warning: Can't find the user!";
         } else {
-            await collection.deleteOne({ name: name });
+            await collection.deleteOne({ _id: userId });
             ctx.body = "The user had been deleted";
         }
     }
