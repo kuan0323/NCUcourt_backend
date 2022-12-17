@@ -16,18 +16,25 @@ export default {
         }else if (sortby === "lastModified"){
             const users = await collection.find({ lastModified: { $exists: true }}).sort({ lastModified : -1}).toArray();
             ctx.body = users;  
+    
         }else if (sortby === "specificName"){
             const name =  ctx.request.body.name;
             const users = await collection.find({ name : name }).toArray();
             ctx.body = users;
         }
 
-        if ( role != "regular" && role != "admin" && role != "superadmin") {
+        
+        if (  role != "regular" && role != "admin" && role != "superadmin" && sortby === undefined && role === undefined) {
             ctx.body = " No such identity, please re-enter.... ";
-        }else {
+        }else if( role === "regular" || role === "admin" || role === "superadmin" ) {
             const users = await collection.find({ role : role }).toArray();
             ctx.body = users;
         } 
+
+        if (sortby === undefined && role === undefined){
+            const users = await collection.find({}).toArray();
+            ctx.body = users;
+        }
     
 
     },
