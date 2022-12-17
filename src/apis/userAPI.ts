@@ -23,9 +23,9 @@ export default {
         }
 
         
-        if (  role != "regular" && role != "admin" && role != "superadmin" && sortby === undefined && role === undefined) {
+        if (  role != "regular" && role != "admin" && role != "superAdmin" && sortby === undefined && role === undefined) {
             ctx.body = " No such identity, please re-enter.... ";
-        }else if( role === "regular" || role === "admin" || role === "superadmin" ) {
+        }else if( role === "regular" || role === "admin" || role === "superAdmin" ) {
             const users = await collection.find({ role : role }).toArray();
             ctx.body = users;
         } 
