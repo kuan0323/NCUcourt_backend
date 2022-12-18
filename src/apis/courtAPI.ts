@@ -5,10 +5,9 @@ export default {
        // get all courts information from the type(ex. basketball) we clicked
        // hint: three type of court (basketball、badminton、volleyball)
         async getCourts(ctx: Koa.Context) {
-              //const type = ctx.query.type;
+
                 const collection = await database.getCollection("courts");
-              //const courts = await collection.find({ type: type }).toArray();
-                const courts = await collection.find({}).toArray();
+                const courts = await collection.find({ beReserved : true }).toArray();
 
                 ctx.body = courts;
         },
