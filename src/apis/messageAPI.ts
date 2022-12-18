@@ -4,7 +4,7 @@ import database from '../database/mongoDatabase';
 export default {
        // get the messagesss of the court
     async getMessages (ctx: Koa.Context) {
-        const courtName = ctx.query.courtName;
+        const courtName = ctx.request.body.courtName;
         const collection = await database.getCollection('messages');
         //const messages = await collection.find( {courtName : courtName}).project( {  _id: 0, courtName: 0,}).toArray();
         const messages = await collection.find({ courtName : courtName }).toArray();
