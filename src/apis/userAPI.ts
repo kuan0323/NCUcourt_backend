@@ -9,28 +9,28 @@ export default {
         const role = ctx.query.role;
         const collection = await database.getCollection('users');
 
-        if (sortby === "createdTime"){
+        if (sortby === "createdTime") {
             const users = await collection.find({}).sort({createdTime : -1}).toArray();
             ctx.body = users;
-        }else if (sortby === "lastModified"){
+        }else if (sortby === "lastModified") {
             const users = await collection.find({ lastModified: { $exists: true }}).sort({ lastModified : -1}).toArray();
             ctx.body = users;  
     
-        }else if (sortby === "specificName"){
+        }else if (sortby === "specificName") {
             const name =  ctx.request.body.name;
             const users = await collection.find({ name : name }).toArray();
             ctx.body = users;
         }
 
         
-        if (  role != "regular" && role != "admin" && role != "superAdmin" && sortby === undefined && role === undefined) {
+        if (role != "regular" && role != "admin" && role != "superAdmin" && sortby === undefined && role === undefined) {
             ctx.body = " No such identity, please re-enter.... ";
         }else if( role === "regular" || role === "admin" || role === "superAdmin" ) {
             const users = await collection.find({ role : role }).toArray();
             ctx.body = users;
         } 
 
-        if (sortby === undefined && role === undefined){
+        if (sortby === undefined && role === undefined) {
             const users = await collection.find({}).toArray();
             ctx.body = users;
         }
@@ -68,7 +68,7 @@ export default {
 
         const collection = await database.getCollection('users');
 
-        if ( (await collection.find({ studentId: studentId }).toArray()).length ===0){
+        if ( (await collection.find({ studentId: studentId }).toArray()).length ===0) {
             const result = await collection.insertOne({name: name, studentId : studentId, email: email, password : hashPwd, phone : phone, createdTime : createdTime, role: role});
             ctx.body = result.ops[0];
         }else {
@@ -79,46 +79,67 @@ export default {
     },
 
     async editUsers (ctx: Koa.Context) {
-        const studentId = ctx.request.body.studentId;
+        
+        const phone = ctx.request.body.phone;
         const email = ctx.request.body.email;
         const oldPassword = ctx.request.body.oldPassword;
         const newPassword = ctx.request.body.newPassword;
-        const phone = ctx.request.body.phone;
-
-        const name = ctx.request.body.name;
+        
+        const name = ctx.query.name;
         ctx.request.body.lastModified = new Date();
         const lastModified = ctx.request.body.lastModified;
         const collection = await database.getCollection("users");
         
-        //hash newPassword 
-        const hashPwd = hashMethod.createHash('sha256')
-        .update(newPassword)
-        .digest('hex');
+        if ( newPassword != undefined && oldPassword != undefined ) {
 
-        //hash oldpassword 
-        const hashOldPwd = hashMethod.createHash('sha256')
-        .update(oldPassword)
-        .digest('hex');
-        
-        if ((await collection.find({ name: name }).toArray()).length ===0) {
-            ctx.body = "Warning: Can't find the user!";
-        } else if((await collection.find({ password: hashOldPwd ,name : name}).toArray()).length ===0){
-            ctx.body = "your old password is incorrect, please try again";
-        } else if ( (await collection.find({ studentId: studentId }).toArray()).length ===0){
-            await collection.updateOne({ name: name },{
-                $set: {
-                    studentId: studentId,
-                    email: email,
-                    password : hashPwd,
-                    phone: phone,
-                    lastModified: lastModified,
-                },
-            });
-            ctx.body = await collection.find({ name: name }).toArray();
-        } else {
-            ctx.body = "This studentId was been register";
+            //hash newPassword 
+            const hashPwd = hashMethod.createHash('sha256')
+            .update(newPassword)
+            .digest('hex');
+
+            //hash oldPassword 
+            const hashOldPwd = hashMethod.createHash('sha256')
+            .update(oldPassword)
+            .digest('hex');
+            
+            if ((await collection.find({ password: hashOldPwd ,name: name }).toArray()).length ===0) {
+                ctx.body = "your old password is incorrect, please try again";
+            }else {
+                await collection.updateOne({ name: name },{
+                    $set: {
+                        password : hashPwd,
+                        lastModified: lastModified,
+                    },
+                });
+            }
+
+        }else if ( (newPassword != undefined && oldPassword === undefined) || (newPassword === undefined && oldPassword != undefined)) {
+            ctx.body = "you didn't offer enough information to change your password"
         }
+        
 
+        if ( (await collection.find({ name: name }).toArray()).length != 0 ) {
+
+            if ( email != undefined ) {
+                await collection.updateOne({ name: name },{
+                    $set: {
+                        email: email,
+                        lastModified: lastModified,
+                    },
+                });
+            }
+            if ( phone != undefined ) {
+                await collection.updateOne({ name: name },{
+                    $set: {
+                        phone: phone,
+                        lastModified: lastModified,
+                    },
+                });
+            }
+            
+            ctx.body = await collection.find({ name: name }).toArray();
+        }
+        
 
     },
 
