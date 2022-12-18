@@ -5,8 +5,8 @@ export default {
 
     async getUsers (ctx: Koa.Context) {
 
-        // const keyword = ctx.query.keyword;
-        // const keyword2 = ctx.query.keyword2;
+        const keyword = ctx.query.keyword;
+        const keyword2 = ctx.query.keyword2;
         const collection = await database.getCollection('users');
         const users = await collection.find({"user_studentID" : keyword, "user_email" : keyword2}).toArray();
 
