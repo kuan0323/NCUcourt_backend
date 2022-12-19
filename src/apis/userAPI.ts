@@ -147,13 +147,13 @@ export default {
                         lastModified: lastModified,
                     },
                 });
-            } 
-
+                ctx.body = await collection.find({ _id: objectId(userId) }).toArray();
+            }
         } 
         
-
     },
 
+    // 
     async deleteUsers (ctx: Koa.Context) { 
         const userId = ctx.state.user;
         const collection = await database.getCollection("users");
