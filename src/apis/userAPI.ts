@@ -80,17 +80,54 @@ export default {
 
     async editUsers (ctx: Koa.Context) {
         
+        const name = ctx.request.body.name;
         const phone = ctx.request.body.phone;
         const email = ctx.request.body.email;
         const oldPassword = ctx.request.body.oldPassword;
         const newPassword = ctx.request.body.newPassword;
         
-        const name = ctx.query.name;
+        const userId = ctx.state.user;
         ctx.request.body.lastModified = new Date();
         const lastModified = ctx.request.body.lastModified;
         const collection = await database.getCollection("users");
+        const objectId = require('mongodb').ObjectId;
+
+        //更改動作分成 : 1.更改密碼(需輸入對的舊密碼) 2.更改name、email、phone
+
+        if ( (await collection.find({ _id: objectId(userId) }).toArray()).length != 0) {
+
+            if ( name != undefined ) {
+                await collection.updateOne({ _id: objectId(userId) },{
+                    $set: {
+                        name: name,
+                        lastModified: lastModified,
+                    },
+                });
+            }
+            if ( email != undefined ) {
+                await collection.updateOne({ _id: objectId(userId) },{
+                    $set: {
+                        email: email,
+                        lastModified: lastModified,
+                    },
+                });
+            }
+            if ( phone != undefined ) {
+                await collection.updateOne({ _id: objectId(userId) },{
+                    $set: {
+                        phone: phone,
+                        lastModified: lastModified,
+                    },
+                });
+            }
+            
+            ctx.body = await collection.find({ _id: objectId(userId) }).toArray();
+        } 
+
         
-        if ( newPassword != undefined && oldPassword != undefined ) {
+        if ( (newPassword != undefined && oldPassword === undefined) || (newPassword === undefined && oldPassword != undefined)) {
+            ctx.body = "you didn't offer enough information to change your password";
+        } else if ( newPassword != undefined && oldPassword != undefined  ) {
 
             //hash newPassword 
             const hashPwd = hashMethod.createHash('sha256')
@@ -102,57 +139,32 @@ export default {
             .update(oldPassword)
             .digest('hex');
             
-            if ((await collection.find({ password: hashOldPwd ,name: name }).toArray()).length ===0) {
+            if ((await collection.find({ password: hashOldPwd , _id: objectId(userId) }).toArray()).length ===0) {
                 ctx.body = "your old password is incorrect, please try again";
-            }else {
-                await collection.updateOne({ name: name },{
+            } else {
+                await collection.updateOne({ _id: objectId(userId) },{
                     $set: {
                         password : hashPwd,
                         lastModified: lastModified,
                     },
                 });
-            }
+            } 
 
-        }else if ( (newPassword != undefined && oldPassword === undefined) || (newPassword === undefined && oldPassword != undefined)) {
-            ctx.body = "you didn't offer enough information to change your password"
-        }
-        
-
-        if ( (await collection.find({ name: name }).toArray()).length != 0 ) {
-
-            if ( email != undefined ) {
-                await collection.updateOne({ name: name },{
-                    $set: {
-                        email: email,
-                        lastModified: lastModified,
-                    },
-                });
-            }
-            if ( phone != undefined ) {
-                await collection.updateOne({ name: name },{
-                    $set: {
-                        phone: phone,
-                        lastModified: lastModified,
-                    },
-                });
-            }
-            
-            ctx.body = await collection.find({ name: name }).toArray();
-        }
+        } 
         
 
     },
 
     async deleteUsers (ctx: Koa.Context) { 
         const userId = ctx.state.user;
-        console.log(userId);
         const collection = await database.getCollection("users");
+        const objectId = require('mongodb').ObjectId;
 
         // check if the target exist
-        if ((await collection.find({ _id: userId }).toArray()).length ===0) {
+        if ((await collection.find({ _id: objectId(userId) }).toArray()).length ===0) {
             ctx.body = "Warning: Can't find the user!";
         } else {
-            await collection.deleteOne({ _id: userId });
+            await collection.deleteOne({ _id: objectId(userId) });
             ctx.body = "The user had been deleted";
         }
     }
