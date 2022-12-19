@@ -92,7 +92,6 @@ export default {
         const collection = await database.getCollection("users");
         const objectId = require('mongodb').ObjectId;
 
-        //更改動作分成 : 1.更改密碼(需輸入對的舊密碼) 2.更改name、email、phone
 
         if ( (await collection.find({ _id: objectId(userId) }).toArray()).length != 0) {
 
