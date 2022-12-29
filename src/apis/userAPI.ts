@@ -44,11 +44,12 @@ export default {
     },
     async register(ctx: Koa.Context) {
         try {
-            const name = ctx.request.body.name;
-            const studentId = ctx.request.body.studentId;
-            const email = ctx.request.body.email;
-            const password = ctx.request.body.password;
-            const phone = ctx.request.body.phone;
+            
+            const name = APIUtils.getBodyAsString(ctx, 'name');
+            const studentId = APIUtils.getBodyAsString(ctx, 'studentId');
+            const email = APIUtils.getBodyAsString(ctx, 'email');
+            const password = APIUtils.getBodyAsString(ctx, 'password');
+            const phone = APIUtils.getBodyAsString(ctx, 'phone');
             const user = await userManager.register(name, studentId, email, password, phone);
             ctx.body = user;
         } catch (e) {

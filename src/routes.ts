@@ -4,11 +4,12 @@ import authAPI from "./apis/authAPI";
 import userAPI from "./apis/userAPI";
 import courtAPI from "./apis/courtAPI";
 import messageAPI from "./apis/messageAPI";
+import userValidator from './apis/validators/userValidator';
 
 
 export default (router: Router) => {
     router.post('/api/auth/login', authAPI.login);
-    router.post('/api/register', userAPI.register);
+    router.post('/api/register', userValidator.registerValidator(), userAPI.register);
 
     router.get('/api/users', authAPI.verifyServiceToken, userAPI.getUsers);
     router.get('/api/users/:name', userAPI.getUsers);
