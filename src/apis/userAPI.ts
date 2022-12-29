@@ -1,6 +1,11 @@
 import * as Koa from 'koa';
+import Container from 'typedi';
 import database from '../database/mongoDatabase';
+import { UserManager } from '../usecases/userManager';
+import { APIUtils } from './apiUtils';
 const hashMethod = require('crypto');
+
+const userManager = Container.get(UserManager);
 
 export default {
 
@@ -38,44 +43,17 @@ export default {
 
     },
     async register(ctx: Koa.Context) {
-        const name = ctx.request.body.name;
-        const studentId = ctx.request.body.studentId;
-        const email = ctx.request.body.email;
-        const password = ctx.request.body.password;
-        const phone = ctx.request.body.phone;
-        const role = "regular";
-
-        const hashPwd = hashMethod.createHash('sha256')
-            .update(password)
-            .digest('hex');
-
-        // check if name is null
-        // if (!name) {
-        //     ctx.response.status = 400;
-        //     ctx.body = {message : "name should be given"};
-        //     return;
-        // }
-        // check email is already registered
-        // if (typeof email !== 'undefined') {
-        //     ctx.response.status = 400;
-        //     ctx.body = {message : "email already exists!"};
-        //     return;
-        // }
-
-        // generate date&time
-        ctx.request.body.createdTime = new Date();
-        const createdTime = ctx.request.body.createdTime;
-
-        const collection = await database.getCollection('users');
-
-        if ((await collection.find({ studentId: studentId }).toArray()).length === 0) {
-            const result = await collection.insertOne({ name: name, studentId: studentId, email: email, password: hashPwd, phone: phone, createdTime: createdTime, role: role });
-            ctx.body = result.ops[0];
-        } else {
-            ctx.body = "This studentId was been register";
+        try {
+            const name = ctx.request.body.name;
+            const studentId = ctx.request.body.studentId;
+            const email = ctx.request.body.email;
+            const password = ctx.request.body.password;
+            const phone = ctx.request.body.phone;
+            const user = await userManager.register(name, studentId, email, password, phone);
+            ctx.body = user;
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
         }
-
-
     },
 
     async editUsers(ctx: Koa.Context) {

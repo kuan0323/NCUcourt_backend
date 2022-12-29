@@ -1,8 +1,11 @@
 import * as mongodb from 'mongodb';
 import { Db, MongoClient } from "mongodb";
+import { Service } from 'typedi';
 import config from '../config';
+import { MongoDatabaseFactory } from './mongoDatabaseFactory';
 const mongo = mongodb.MongoClient;
 
+@Service({ factory: [MongoDatabaseFactory, 'create'] })
 export class MongoDatabase {
 
     private _dbName: string

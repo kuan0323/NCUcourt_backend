@@ -1,17 +1,19 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
-
+import 'reflect-metadata';
 import * as fs from 'fs';
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import * as koaBody from 'koa-body';
 import * as cors from '@koa/cors';
 import * as koaLogger from 'koa-logger';
+import binding from './binding';
 import routes from './routes';
 
 const app = new Koa();
 const router = new Router();
 
+binding();
 routes(router);
 
 app.use(cors());
