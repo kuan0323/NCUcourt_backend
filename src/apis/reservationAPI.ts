@@ -91,7 +91,8 @@ export default {
 
     async deleteReservations(ctx: Koa.Context) {
 
-        const courtName = ctx.request.body.courtName;
+        //courtNum = ctx.query.courtNmae; 刪除的球場編號
+        const courtName = ctx.query.courtName;
         const collection = await database.getCollection("reservations");
 
         if (
