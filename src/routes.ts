@@ -8,11 +8,11 @@ import messageAPI from "./apis/messageAPI";
 
 export default (router: Router) => {
     router.post('/api/auth/login', authAPI.login);
+    router.post('/api/register', userAPI.register);
 
     router.get('/api/users', authAPI.verifyServiceToken, userAPI.getUsers);
     router.get('/api/users/:name', userAPI.getUsers);
-    // router.post('/api/register', authAPI.verifyServiceToken, userAPI.register);
-    router.post('/api/users', userAPI.register);
+
     // router.get('/api/loginUsers', userAPI.loginUsers);
     router.put('/api/users', authAPI.verifyServiceToken, userAPI.editUsers);
     router.delete('/api/users', authAPI.verifyServiceToken, userAPI.deleteUsers);
