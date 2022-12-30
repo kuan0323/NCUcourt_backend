@@ -1,8 +1,11 @@
+import { ObjectID } from "mongodb";
 import { Service } from "typedi";
 import { MongoDatabase } from "../../database/mongoDatabase";
 import { User } from "../../entities/user";
+import { IllegalArgumentError } from "../../exceptions/illegalArgumentError";
 import TypeUtils from "../../libs/typeUtils";
 import { AddUserParameter } from "../data_access/parameters/addUserParameter";
+import { UpdateUserParameter } from "../data_access/parameters/updateUserParameter";
 import { UserGateway } from "../data_access/userGateway";
 
 @Service()
@@ -15,6 +18,12 @@ export class MongoUserService implements UserGateway {
 
     constructor (database: MongoDatabase) {
         this.database = database;
+    }
+
+    async isPasswordCorrect (id: string, password: string): Promise<boolean> {
+        const collection = await this.database.getCollection(this.collectionName);
+        const result = await collection.findOne({ _id: new ObjectID(id) });
+        return TypeUtils.isNotNone(result) && result.password === password;
     }
     
     async findByStudentId (studentId: string): Promise<User> {
@@ -35,6 +44,23 @@ export class MongoUserService implements UserGateway {
             role: parameter.role
         });
         return this.toUser(result.ops[0]);
+    }
+
+    async updateUser (parameter: UpdateUserParameter): Promise<void> {
+        const updates: any = {};
+        
+        if (TypeUtils.isNone(parameter.id)) {
+            throw new IllegalArgumentError('user id should be given');
+        }
+        if (TypeUtils.isNotNone(parameter.email)) updates.email = parameter.email;
+        if (TypeUtils.isNotNone(parameter.password)) updates.password = parameter.password;
+        if (TypeUtils.isNotNone(parameter.name)) updates.name = parameter.name;
+        if (TypeUtils.isNotNone(parameter.phone)) updates.phone = parameter.phone;
+        updates.lastModified = new Date();
+        const collection = await this.database.getCollection(this.collectionName);
+        await collection.updateOne({ _id: new ObjectID(parameter.id) }, {
+            $set: updates
+        });
     }
 
     private toUser (json: any): User {

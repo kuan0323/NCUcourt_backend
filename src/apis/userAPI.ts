@@ -44,7 +44,6 @@ export default {
     },
     async register(ctx: Koa.Context) {
         try {
-            
             const name = APIUtils.getBodyAsString(ctx, 'name');
             const studentId = APIUtils.getBodyAsString(ctx, 'studentId');
             const email = APIUtils.getBodyAsString(ctx, 'email');
@@ -58,78 +57,20 @@ export default {
     },
 
     async editUsers(ctx: Koa.Context) {
-
-        const name = ctx.request.body.name;
-        const phone = ctx.request.body.phone;
-        const email = ctx.request.body.email;
-        const oldPassword = ctx.request.body.oldPassword;
-        const newPassword = ctx.request.body.newPassword;
-
-        const userId = ctx.state.user;
-        ctx.request.body.lastModified = new Date();
-        const lastModified = ctx.request.body.lastModified;
-        const collection = await database.getCollection("users");
-        const objectId = require('mongodb').ObjectId;
-
-
-        if ((await collection.find({ _id: objectId(userId) }).toArray()).length != 0) {
-
-            if (name != undefined) {
-                await collection.updateOne({ _id: objectId(userId) }, {
-                    $set: {
-                        name: name,
-                        lastModified: lastModified,
-                    },
-                });
-            }
-            if (email != undefined) {
-                await collection.updateOne({ _id: objectId(userId) }, {
-                    $set: {
-                        email: email,
-                        lastModified: lastModified,
-                    },
-                });
-            }
-            if (phone != undefined) {
-                await collection.updateOne({ _id: objectId(userId) }, {
-                    $set: {
-                        phone: phone,
-                        lastModified: lastModified,
-                    },
-                });
-            }
-
-            ctx.body = await collection.find({ _id: objectId(userId) }).toArray();
+        try {
+            const id = APIUtils.getAuthUserId(ctx);
+            const name = APIUtils.getBodyAsString(ctx, 'name');
+            const phone = APIUtils.getBodyAsString(ctx, 'phone');
+            const email = APIUtils.getBodyAsString(ctx, 'email');
+            const oldPassword = APIUtils.getBodyAsString(ctx, 'oldPassword');
+            const newPassword = APIUtils.getBodyAsString(ctx, 'newPassword');
+            await userManager.editUser({
+                id, name, phone, email, oldPassword, newPassword
+            });
+            ctx.body = { message: 'update user profile successfully.' };
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
         }
-
-
-        if ((newPassword != undefined && oldPassword === undefined) || (newPassword === undefined && oldPassword != undefined)) {
-            ctx.body = "you didn't offer enough information to change your password";
-        } else if (newPassword != undefined && oldPassword != undefined) {
-
-            //hash newPassword 
-            const hashPwd = hashMethod.createHash('sha256')
-                .update(newPassword)
-                .digest('hex');
-
-            //hash oldPassword 
-            const hashOldPwd = hashMethod.createHash('sha256')
-                .update(oldPassword)
-                .digest('hex');
-
-            if ((await collection.find({ password: hashOldPwd, _id: objectId(userId) }).toArray()).length === 0) {
-                ctx.body = "your old password is incorrect, please try again";
-            } else {
-                await collection.updateOne({ _id: objectId(userId) }, {
-                    $set: {
-                        password: hashPwd,
-                        lastModified: lastModified,
-                    },
-                });
-                ctx.body = await collection.find({ _id: objectId(userId) }).toArray();
-            }
-        }
-
     },
 
     // 

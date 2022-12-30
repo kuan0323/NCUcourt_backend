@@ -56,7 +56,6 @@ export default {
                 return;
             }
             ctx.state.user = userId;
-            console.log(ctx.state.user);
             await next(); // verify 只是一個 middleware
         } catch (e) {
             if (e.name === 'JsonWebTokenError' && e.message === 'invalid token') {
