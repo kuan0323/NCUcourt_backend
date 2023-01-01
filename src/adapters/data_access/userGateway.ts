@@ -5,6 +5,7 @@ import { UpdateUserParameter } from "./parameters/updateUserParameter";
 
 export interface UserGateway {
     isPasswordCorrect (id: string, password: string): Promise<boolean>;
+    findById (id: string): Promise<User>;
     findByStudentId (studentId: string): Promise<User>;
     find (parameter: SearchUserParameter): Promise<User[]>;
     addUser (parameter: AddUserParameter): Promise<User>;

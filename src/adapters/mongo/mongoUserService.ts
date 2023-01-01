@@ -26,7 +26,13 @@ export class MongoUserService implements UserGateway {
         const result = await collection.findOne({ _id: new ObjectID(id) });
         return TypeUtils.isNotNone(result) && result.password === password;
     }
-    
+
+    async findById (id: string): Promise<User> {
+        const collection = await this.database.getCollection(this.collectionName);
+        const result = await collection.findOne({ _id: new ObjectID(id) });
+        return TypeUtils.isNone(result) ? result : this.toUser(result);
+    }
+
     async findByStudentId (studentId: string): Promise<User> {
         const collection = await this.database.getCollection(this.collectionName);
         const result = await collection.findOne({ studentId });
