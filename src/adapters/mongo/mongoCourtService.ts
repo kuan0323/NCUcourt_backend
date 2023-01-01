@@ -36,7 +36,7 @@ export class MongoCourtService implements CourtGateway {
 
     private toCourt (json: any): Court {
         return new Court({
-            _id: json._id,
+            id: json._id,
             name: json.name,
             price: json.price,
             type: json.type,

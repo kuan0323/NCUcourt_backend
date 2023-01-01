@@ -24,21 +24,18 @@ export default {
     },
 
     async createReservations(ctx: Koa.Context) {
-
         try {
-            console.log("111");
+            const userId = APIUtils.getAuthUserId(ctx);
             const courtId = APIUtils.getBodyAsString(ctx, 'courtId');
-            const userId = APIUtils.getBodyAsString(ctx, 'userId');
             const date = APIUtils.getBodyAsString(ctx, 'date');
             const time = APIUtils.getBodyAsString(ctx, 'time');
-            
+            // TODO: the format of date and time should be validate
+            // TODO: the range of date is only valid in the next 7 days
             const reservation = await reservationManager.addReservation(courtId, userId, date, time);
             ctx.body = reservation;
         } catch (e) {
             APIUtils.handleError(ctx, e);
         }
-
-        // s
     },
 
     async editReservations(ctx: Koa.Context) {

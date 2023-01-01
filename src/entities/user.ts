@@ -1,7 +1,7 @@
 import TypeUtils from "../libs/typeUtils";
 
 export class User {
-    public _id: string;
+    public id: string;
     public name: string;
     public studentId: string;
     public email: string;
@@ -10,7 +10,7 @@ export class User {
     public createdTime: Date;
 
     constructor (init: Partial<User>) {
-        if (TypeUtils.isNotNone(init._id)) this._id = init._id;
+        if (TypeUtils.isNotNone(init.id)) this.id = init.id;
         if (TypeUtils.isNotNone(init.name)) this.name = init.name;
         if (TypeUtils.isNotNone(init.studentId)) this.studentId = init.studentId;
         if (TypeUtils.isNotNone(init.email)) this.email = init.email;

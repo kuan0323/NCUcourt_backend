@@ -3,6 +3,7 @@ import { IllegalArgumentError } from "../exceptions/illegalArgumentError"
 import TypeUtils from "../libs/typeUtils"
 import { ReservationGateway } from "../adapters/data_access/reservationGateway";
 import { AddReservationParameter } from "../adapters/data_access/parameters/addReservationParameter";
+import { SearchReservationParameter } from "../adapters/data_access/parameters/searchReservationParameter";
 
 
 @Service()
@@ -15,10 +16,11 @@ export class ReservationManager {
     }
 
     async addReservation(courtId: string, userId: string, date: string, time: string) {
-        const existReservation = await this.reservationGateway.find(new AddReservationParameter({
+        const existReservation = await this.reservationGateway.find(new SearchReservationParameter({
             courtId, userId, date, time
         }));
-        if (TypeUtils.isNotNone(existReservation)) {
+
+        if (existReservation.length !== 0) {
             throw new IllegalArgumentError('This reservation can\'t be recorded.');
         }
 

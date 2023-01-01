@@ -1,7 +1,7 @@
 import TypeUtils from "../libs/typeUtils";
 
 export class Court {
-    public _id: string;
+    public id: string;
     public name: string;
     public price: string;
     public type: string;
@@ -10,7 +10,7 @@ export class Court {
     public lastModified: Date;
 
     constructor (init: Partial<Court>) {
-        if (TypeUtils.isNotNone(init._id)) this._id = init._id;
+        if (TypeUtils.isNotNone(init.id)) this.id = init.id;
         if (TypeUtils.isNotNone(init.name)) this.name = init.name;
         if (TypeUtils.isNotNone(init.price)) this.price = init.price;
         if (TypeUtils.isNotNone(init.type)) this.type = init.type;
