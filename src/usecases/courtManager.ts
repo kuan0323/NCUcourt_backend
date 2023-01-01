@@ -12,9 +12,9 @@ export class CourtManager {
 
 
     async addCourt(name: string, price: string, type: string) {
-        const a = await this.courtGateway.findByName(name);
+        const existCourt = await this.courtGateway.findByName(name);
 
-        if(TypeUtils.isNotNone(a)) {
+        if(TypeUtils.isNotNone(existCourt)) {
             throw new IllegalArgumentError("The court had been added.");
         } 
 

@@ -7,6 +7,7 @@ import messageAPI from "./apis/messageAPI";
 import userValidator from './apis/validators/userValidator';
 import courtValidator from './apis/validators/courtValidator';
 import reservationValidator from './apis/validators/reservationValidator';
+import messageValidator from './apis/validators/messageValidator';
 
 export default (router: Router) => {
     router.post('/api/auth/login', authAPI.login);
@@ -31,7 +32,7 @@ export default (router: Router) => {
     router.delete('/api/courts', authAPI.verifyServiceToken, courtAPI.deleteCourts);
 
     router.get('/api/messages', authAPI.verifyServiceToken, messageAPI.getMessages);
-    router.post('/api/messages', authAPI.verifyServiceToken, messageAPI.createMessages);
+    router.post('/api/messages', messageValidator.reservationValidator(), authAPI.verifyServiceToken, messageAPI.createMessages);
     router.put('/api/messages', authAPI.verifyServiceToken, messageAPI.editMessages);
     router.delete('/api/messages', authAPI.verifyServiceToken, messageAPI.deleteMessages);
 
