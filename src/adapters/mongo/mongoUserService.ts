@@ -5,6 +5,7 @@ import { User } from "../../entities/user";
 import { IllegalArgumentError } from "../../exceptions/illegalArgumentError";
 import TypeUtils from "../../libs/typeUtils";
 import { AddUserParameter } from "../data_access/parameters/addUserParameter";
+import { SearchUserParameter } from "../data_access/parameters/searchUserParameter";
 import { UpdateUserParameter } from "../data_access/parameters/updateUserParameter";
 import { UserGateway } from "../data_access/userGateway";
 
@@ -61,6 +62,21 @@ export class MongoUserService implements UserGateway {
         await collection.updateOne({ _id: new ObjectID(parameter.id) }, {
             $set: updates
         });
+    }
+
+    async find (parameter: SearchUserParameter): Promise<User[]> {
+        const filter: any = {};
+        if (TypeUtils.isNotNone(parameter.keyword)) filter.name = { $regex: `.*${parameter.keyword}.*`, $options: 'i' };
+        if (TypeUtils.isNotNone(parameter.role)) filter.role = parameter.role;
+        const sort = TypeUtils.isNotNone(parameter.sortBy)
+                        ? { [parameter.sortBy]: -1 }
+                        : { lastModified: -1 }
+        const collection = await this.database.getCollection(this.collectionName);
+        const results = await collection
+                                .find(filter)
+                                .sort(sort)
+                                .toArray()
+        return results.map(r => this.toUser(r));
     }
 
     private toUser (json: any): User {
