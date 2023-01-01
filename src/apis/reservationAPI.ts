@@ -1,5 +1,10 @@
 import * as Koa from 'koa';
+import Container from 'typedi';
 import database from '../database/mongoDatabase';
+import { ReservationManager } from '../usecases/reservationManager';
+import { APIUtils } from './apiUtils';
+
+const reservationManager = Container.get(ReservationManager);
 
 export default {
     // User can view records
@@ -20,39 +25,20 @@ export default {
 
     async createReservations(ctx: Koa.Context) {
 
-        const courtName = ctx.request.body.courtName;
-        const studentId = ctx.request.body.studentId;
-        const studentEmail = ctx.request.body.studentEmail;
-        const studentPhone = ctx.request.body.studentPhone;
-        const date = ctx.request.body.date;
-        const time = ctx.request.body.time;
-
-        const collection = await database.getCollection("reservations");
-
-        // let id = await collection.find().count();
-
-        ctx.request.body.createdTime = new Date();
-        const createdTime = ctx.request.body.createdTime;
-
-        if (
-            (await collection.find({
-                courtName: courtName,
-                date: date,
-                time: time,
-            }).toArray()).length === 0
-        ) {
-            const result = await collection.insertOne({
-                courtName: courtName,
-                studentId: studentId,
-                studentEmail: studentEmail,
-                studentPhone: studentPhone,
-                createdTime: createdTime,
-                date: date,
-                time: time
-            });
-
-            ctx.body = result.ops[0];
+        try {
+            console.log("111");
+            const courtId = APIUtils.getBodyAsString(ctx, 'courtId');
+            const userId = APIUtils.getBodyAsString(ctx, 'userId');
+            const date = APIUtils.getBodyAsString(ctx, 'date');
+            const time = APIUtils.getBodyAsString(ctx, 'time');
+            
+            const reservation = await reservationManager.addReservation(courtId, userId, date, time);
+            ctx.body = reservation;
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
         }
+
+        // s
     },
 
     async editReservations(ctx: Koa.Context) {
