@@ -26,6 +26,7 @@
     "@types/mongodb": "^3.6.20"
   },
   "scripts": {
+    "start": "NODE_ENV=production node ./dist/app.js",
     "dev": "NODE_ENV=development ts-node-dev --transpile-only --respawn --inspect=4321 -- src/app.ts",
     "dev-win": "cross-env NODE_ENV=development ts-node-dev --transpile-only --respawn --inspect=4321 -- src/app.ts"
   },
