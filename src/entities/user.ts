@@ -7,7 +7,7 @@ export class User {
     public email: string;
     public phone: string;
     public role: string;
-    public createdTime: string;
+    public createdTime: Date;
 
     constructor (init: Partial<User>) {
         if (TypeUtils.isNotNone(init._id)) this._id = init._id;

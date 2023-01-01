@@ -56,7 +56,7 @@ export class UserManager {
             await this.userGateway.updateUser(new UpdateUserParameter({
                 id, password: hashPwd
             }));
-        } else if (TypeUtils.isNotNone(oldPassword) && TypeUtils.isNotNone(newPassword)) {
+        } else if (TypeUtils.isNotNone(oldPassword) || TypeUtils.isNotNone(newPassword)) {
             throw new IllegalArgumentError('you didn\'t offer enough information to change your password');
         }
     }

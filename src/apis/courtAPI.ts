@@ -1,5 +1,10 @@
 import * as Koa from 'koa';
 import database from '../database/mongoDatabase';
+import Container from 'typedi';
+import { CourtManager } from '../usecases/courtManager';
+import { APIUtils } from './apiUtils';
+
+const courtManager = Container.get(CourtManager);
 
 export default {
        // get all courts information from the type(ex. basketball) we clicked
@@ -12,30 +17,35 @@ export default {
                 ctx.body = courts;
         },
         async createCourts(ctx: Koa.Context) {
-                const name = ctx.request.body.name;
-                const photo = ctx.request.body.photo;
-                const price = ctx.request.body.court_price;
-                // const court_status = ctx.request.body.court_status;
-                const type = ctx.request.body.type;
+            try {
+                const name = APIUtils.getBodyAsString(ctx, 'name');
+                const price = APIUtils.getBodyAsString(ctx, 'price');
+                const type = APIUtils.getBodyAsString(ctx, 'type');
+                const court = await courtManager.addCourt(name, price, type);
+                ctx.body = court;
+            } catch (e) {
+                APIUtils.handleError(ctx, e);
+            }
 
-                ctx.request.body.createdTime = new Date();
-                const createdTime = ctx.request.body.createdTime;
-                const collection = await database.getCollection("courts");
 
-              //check if name is used
-                if ((await collection.find({ name: name }).toArray()).length === 0) {
-                	const result = await collection.insertOne({
-                    name: name,
-                    photo: photo,
-                    price: price,
-                    beReserved: true,
-                    type: type,
-                    createdTime: createdTime,
-                    });
-                    ctx.body = result.ops[0];
-            	} else {
-                    ctx.body = "Warning: The court name had been used!";
-            	}
+            //     ctx.request.body.createdTime = new Date();
+            //     const createdTime = ctx.request.body.createdTime;
+            //     const collection = await database.getCollection("courts");
+
+            //   //check if name is used
+            //     if ((await collection.find({ name: name }).toArray()).length === 0) {
+            //     	const result = await collection.insertOne({
+            //         name: name,
+            //         photo: photo,
+            //         price: price,
+            //         beReserved: true,
+            //         type: type,
+            //         createdTime: createdTime,
+            //         });
+            //         ctx.body = result.ops[0];
+            //     } else {
+            //         ctx.body = "Warning: The court name had been used!";
+            //     }
     },
 
         async editCourts (ctx: Koa.Context) {
