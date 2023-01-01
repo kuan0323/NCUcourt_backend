@@ -1,67 +1,94 @@
 import * as Koa from 'koa';
+import Container from 'typedi';
 import database from '../database/mongoDatabase';
+import { UserManager } from '../usecases/userManager';
+import { APIUtils } from './apiUtils';
+const hashMethod = require('crypto');
+
+const userManager = Container.get(UserManager);
 
 export default {
 
-    async getUsers (ctx: Koa.Context) {
-
-        const keyword = ctx.query.keyword;
-        const keyword2 = ctx.query.keyword2;
-        const collection = await database.getCollection('users');
-        const users = await collection.find({"studentID" : keyword, "email" : keyword2}).toArray();
-        // const users = await collection.find({"name" : keyword, "email" : keyword2}).toArray();
-        ctx.body = users;
-    },
-
-
-    async register (ctx: Koa.Context) {
-        const name = ctx.request.body.name;
-        const studentID = ctx.request.body.studentID;
-        const email = ctx.request.body.email;
-        const password = ctx.request.body.password;
-        const phone = ctx.request.body.phone;
-        const status = ctx.request.body.status;
-
-        // check if name is null
-        // if (!name) {
-        //     ctx.response.status = 400;
-        //     ctx.body = {message : "name should be given"};
-        //     return;
-        // }
-        // check email is already registered
-        // if (typeof email !== 'undefined') {
-        //     ctx.response.status = 400;
-        //     ctx.body = {message : "email already exists!"};
-        //     return;
-        // }
-
-        // generate date&time
-        ctx.request.body.createdTime = new Date();
-        const createdTime = ctx.request.body.createdTime;
-        const collection = await database.getCollection('users');
-        const result = await collection.insertOne({name: name, studentID : studentID, email: email, password : password, phone : phone, status : status, createdTime : createdTime});
+    async getUsers(ctx: Koa.Context) {
         
-        ctx.body = result.ops[0];
+        const sortby = ctx.query.sortby;
+        const role = ctx.query.role;
+        const collection = await database.getCollection('users');
+        const objectId = require('mongodb').ObjectId;
+        const userId = ctx.state.user;
+
+        if (sortby === "specificName") {
+            const name = ctx.request.body.name;
+            const users = await collection.find({ name: name }).toArray();
+            ctx.body = users;
+        }
+
+        if (role != "regular" && role != "admin" && role != "superAdmin" && sortby === undefined && role === undefined) {
+            ctx.body = " No such identity, please re-enter.... ";
+        } else if (role === "regular" || role === "admin" || role === "superAdmin") {
+            
+            if (sortby === "createdTime") {
+                const users = await collection.find({ role: role }).sort({ createdTime: -1 }).toArray();
+                ctx.body = users;
+            } else if (sortby === "lastModified") {
+                const users = await collection.find({ lastModified: { $exists: true }, role: role }).sort({ lastModified: -1 }).toArray();
+                ctx.body = users;
+            }
+        }
+
+        if ((sortby === undefined && role === undefined && await collection.find({ _id: objectId(userId) }).toArray()).length != 0) {
+            const users = await collection.find({ _id: objectId(userId) }).toArray();
+            ctx.body = users;
+        }
+
+    },
+    async register(ctx: Koa.Context) {
+        try {
+            const name = APIUtils.getBodyAsString(ctx, 'name');
+            const studentId = APIUtils.getBodyAsString(ctx, 'studentId');
+            const email = APIUtils.getBodyAsString(ctx, 'email');
+            const password = APIUtils.getBodyAsString(ctx, 'password');
+            const phone = APIUtils.getBodyAsString(ctx, 'phone');
+            const user = await userManager.register(name, studentId, email, password, phone);
+            ctx.body = user;
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
+        }
     },
 
-    async loginUsers (ctx: Koa.Context) {
-        const email = ctx.query.keyword1;
-        const password = ctx.query.keyword2;
+    async editUsers(ctx: Koa.Context) {
+        try {
+            const id = APIUtils.getAuthUserId(ctx);
+            const name = APIUtils.getBodyAsString(ctx, 'name');
+            const phone = APIUtils.getBodyAsString(ctx, 'phone');
+            const email = APIUtils.getBodyAsString(ctx, 'email');
+            const oldPassword = APIUtils.getBodyAsString(ctx, 'oldPassword');
+            const newPassword = APIUtils.getBodyAsString(ctx, 'newPassword');
+            await userManager.editUser({
+                id, name, phone, email, oldPassword, newPassword
+            });
+            ctx.body = { message: 'update user profile successfully.' };
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
+        }
+    },
 
-        const collection = await database.getCollection('users');
-        const users = await collection.find({"name" : email, "email" : password}).toArray();
+    // 
+    async deleteUsers(ctx: Koa.Context) {
+        const userId = ctx.state.user;
+        const collection = await database.getCollection("users");
+        const objectId = require('mongodb').ObjectId;
 
-        ctx.body = users;
-
+        // check if the target exist
+        if ((await collection.find({ _id: objectId(userId) }).toArray()).length === 0) {
+            ctx.body = "Warning: Can't find the user!";
+        } else {
+            await collection.deleteOne({ _id: objectId(userId) });
+            ctx.body = "The user had been deleted";
+        }
     }
 
-    // async deleteUsers (ctx: Koa.Context) { 
 
-    // }
-
-    // async editUsers (ctx: Koa.Context) {
-
-    // }
 
 }
 
