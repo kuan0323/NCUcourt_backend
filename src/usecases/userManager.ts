@@ -60,4 +60,8 @@ export class UserManager {
             throw new IllegalArgumentError('you didn\'t offer enough information to change your password');
         }
     }
+
+    async searchUsers ({ keyword, role, sortBy }: { keyword: string, role: string, sortBy: string }) {
+        return await this.userGateway.find({keyword, role, sortBy});
+    }
 }

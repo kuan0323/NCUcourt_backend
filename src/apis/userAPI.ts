@@ -3,42 +3,19 @@ import Container from 'typedi';
 import database from '../database/mongoDatabase';
 import { UserManager } from '../usecases/userManager';
 import { APIUtils } from './apiUtils';
-const hashMethod = require('crypto');
 
 const userManager = Container.get(UserManager);
 
 export default {
 
     async getUsers(ctx: Koa.Context) {
-        
-        const sortby = ctx.query.sortby;
-        const role = ctx.query.role;
-        const collection = await database.getCollection('users');
-        const objectId = require('mongodb').ObjectId;
-        const userId = ctx.state.user;
-
-        if (sortby === "specificName") {
-            const name = ctx.request.body.name;
-            const users = await collection.find({ name: name }).toArray();
-            ctx.body = users;
-        }
-
-        if (role != "regular" && role != "admin" && role != "superAdmin" && sortby === undefined && role === undefined) {
-            ctx.body = " No such identity, please re-enter.... ";
-        } else if (role === "regular" || role === "admin" || role === "superAdmin") {
-            
-            if (sortby === "createdTime") {
-                const users = await collection.find({ role: role }).sort({ createdTime: -1 }).toArray();
-                ctx.body = users;
-            } else if (sortby === "lastModified") {
-                const users = await collection.find({ lastModified: { $exists: true }, role: role }).sort({ lastModified: -1 }).toArray();
-                ctx.body = users;
-            }
-        }
-
-        if ((sortby === undefined && role === undefined && await collection.find({ _id: objectId(userId) }).toArray()).length != 0) {
-            const users = await collection.find({ _id: objectId(userId) }).toArray();
-            ctx.body = users;
+        try {
+            const keyword = APIUtils.getQueryAsString(ctx, 'keyword', null);
+            const role = APIUtils.getQueryAsString(ctx, 'role', null);
+            const sortBy = APIUtils.getQueryAsString(ctx, 'sortby', null);
+            ctx.body = await userManager.searchUsers({ keyword, role, sortBy });
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
         }
 
     },
