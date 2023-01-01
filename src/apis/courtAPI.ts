@@ -7,9 +7,7 @@ export default {
   async getCourts(ctx: Koa.Context) {
     const type_keyword = ctx.query.type_keyword;
     const collection = await database.getCollection("courts");
-    const courts = await collection
-      .find({ court_type: type_keyword })
-      .toArray();
+    const courts = await collection.find({ type: type_keyword }).toArray();
     ctx.body = courts;
   },
   async createCourts(ctx: Koa.Context) {
