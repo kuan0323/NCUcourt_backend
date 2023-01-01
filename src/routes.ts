@@ -6,7 +6,7 @@ import courtAPI from "./apis/courtAPI";
 import messageAPI from "./apis/messageAPI";
 import userValidator from './apis/validators/userValidator';
 import courtValidator from './apis/validators/courtValidator';
-
+import reservationValidator from './apis/validators/reservationValidator';
 
 export default (router: Router) => {
     router.post('/api/auth/login', authAPI.login);
@@ -21,7 +21,7 @@ export default (router: Router) => {
 
 
     router.get('/api/reservations', authAPI.verifyServiceToken, reservationAPI.getReservations);
-    router.post('/api/reservations', authAPI.verifyServiceToken, reservationAPI.createReservations);
+    router.post('/api/reservations',reservationValidator.reservationValidator(), authAPI.verifyServiceToken, reservationAPI.createReservations);
     router.put('/api/reservations', authAPI.verifyServiceToken, reservationAPI.editReservations);
     router.delete('/api/reservations', authAPI.verifyServiceToken, reservationAPI.deleteReservations);
 
