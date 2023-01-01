@@ -1,5 +1,8 @@
-# ignore .env.development
+# ignore environment files
 .env.development
+.env.production
 
 # ignore node-module directory
 node_modules/
+
+gcp-key.json
