@@ -7,7 +7,7 @@ import TypeUtils from "../libs/typeUtils";
 
 export class APIUtils {
 
-    static getMemeToken (ctx: Koa.Context): string {
+    static getServiceToken (ctx: Koa.Context): string {
         const authorization = ctx.headers.authorization
         if (!authorization || authorization.substring(0, 6) !== 'Bearer') {
             throw new AuthError('token format should be "Bearer <jwt token>"');

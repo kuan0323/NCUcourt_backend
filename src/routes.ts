@@ -7,9 +7,10 @@ import messageAPI from "./apis/messageAPI";
 import userValidator from './apis/validators/userValidator';
 import courtValidator from './apis/validators/courtValidator';
 import reservationValidator from './apis/validators/reservationValidator';
+import authValidator from './apis/validators/authValidator';
 
 export default (router: Router) => {
-    router.post('/api/auth/login', authAPI.login);
+    router.post('/api/auth/login', authValidator.loginValidator(), authAPI.login);
     router.post('/api/register', userValidator.registerValidator(), userAPI.register);
 
     router.get('/api/users', authAPI.verifyServiceToken, userAPI.getUsers);
