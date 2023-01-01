@@ -6,7 +6,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "jsonwebtoken": "^8.5.1",
-    "koa": "^2.14.1",
+    "koa": "^2.13.4",
     "koa-body": "^4.2.0",
     "koa-compose": "^4.1.0",
     "koa-logger": "^3.2.1",
@@ -27,13 +27,9 @@
     "@types/mongodb": "^3.6.20"
   },
   "scripts": {
-<<<<<<< HEAD
     "start": "NODE_ENV=production node ./dist/app.js",
-    "dev": "NODE_ENV=development ts-node-dev --transpile-only --respawn --inspect=4321 -- src/app.ts",
+    "dev": "cross-env NODE_ENV=development ts-node-dev --transpile-only --respawn --inspect=4321 -- src/app.ts",
     "dev-win": "cross-env NODE_ENV=development ts-node-dev --transpile-only --respawn --inspect=4321 -- src/app.ts"
-=======
-    "dev": "cross-env NODE_ENV=development ts-node-dev --transpile-only --respawn --inspect=4321 -- src/app.ts"
->>>>>>> Fu
   },
   "author": "",
   "license": "ISC",
