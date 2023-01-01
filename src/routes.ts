@@ -15,7 +15,6 @@ export default (router: Router) => {
 
     router.get('/api/users/profile', authAPI.verifyServiceToken, userAPI.getSelfUser);
     router.get('/api/users', authAPI.verifyServiceToken, userAPI.getUsers);
-    router.get('/api/users/:name', userAPI.getUsers);
 
     // router.get('/api/loginUsers', userAPI.loginUsers);
     router.put('/api/users', authAPI.verifyServiceToken, userAPI.editUsers);
