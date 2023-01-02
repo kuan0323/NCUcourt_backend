@@ -89,15 +89,13 @@ export default {
     },
 
 	async deleteCourts(ctx: Koa.Context) {
-        const name = ctx.query.name;
-        const collection = await database.getCollection("courts");
-
-        //check if the target exist
-        if ((await collection.find({ name: name }).toArray()).length ===0) {
-            ctx.body = "Warning: Can't find the court!";
-        } else {
-            const deleting = await collection.deleteOne({ name: name });
-            ctx.body = "The court had been deleted";
+        try {
+            const userId = APIUtils.getAuthUserId(ctx);
+            const courtId = APIUtils.getParamsAsString(ctx, 'id');
+            await courtManager.deleteCourt(userId, courtId);
+            ctx.body = { message: 'the court deleted successfully.' };
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
         }
-    },
+    }
 };

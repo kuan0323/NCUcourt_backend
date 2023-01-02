@@ -6,12 +6,16 @@ import { CourtGateway } from "../adapters/data_access/courtGateway";
 import { AddCourtParameter } from "../adapters/data_access/parameters/addCourtParameters";
 import { ImageStorage } from "../adapters/storage_access/imageStorage";
 import { ImageUtils } from "../libs/imageUtils";
+import { UserGateway } from '../adapters/data_access/userGateway';
+import { PermissionError } from '../exceptions/permissionError';
 
 @Service()
 export class CourtManager {
     
     @Inject('CourtService')
     private courtGateway: CourtGateway;
+    @Inject('UserService')
+    private userGateway: UserGateway;
     @Inject('ImageStorage')
     private imageStorage: ImageStorage;
 
@@ -35,5 +39,13 @@ export class CourtManager {
         const courts = await this.courtGateway.find(type, name);
 
         return courts;
+    }
+
+    async deleteCourt (userId: string, courtId: string) {
+        const user = await this.userGateway.findById(userId);
+        if (user.role !== 'admin' && user.role !== 'superAdmin') {
+            throw new PermissionError('no permission to delete court.');
+        }
+        await this.courtGateway.deleteCourt(courtId);
     }
 }

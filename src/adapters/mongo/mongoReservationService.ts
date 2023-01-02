@@ -84,14 +84,14 @@ export class MongoReservationService implements ReservationGateway {
 
     private toReservation (json: any): Reservation {
         return new Reservation({
-            id: json._id,
+            id: json._id.toString(),
             court: new Court({
-                id: json.court._id,
+                id: json.court._id.toString(),
                 name: json.court.name,
                 price: json.court.price,
             }),
             user: new User({
-                id: json.user._id,
+                id: json.user._id.toString(),
                 name: json.user.name,
                 studentId: json.user.studentId,
                 email: json.user.email,

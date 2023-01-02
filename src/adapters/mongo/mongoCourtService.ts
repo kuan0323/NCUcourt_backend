@@ -4,6 +4,8 @@ import { CourtGateway } from "../data_access/courtGateway";
 import TypeUtils from "../../libs/typeUtils";
 import { AddCourtParameter } from "../data_access/parameters/addCourtParameters";
 import { Service } from "typedi";
+import { ObjectID } from "mongodb";
+import { IllegalArgumentError } from "../../exceptions/illegalArgumentError";
 
 @Service()
 @Service('CourtService')
@@ -43,6 +45,17 @@ export class MongoCourtService implements CourtGateway {
         const collection = await this.database.getCollection(this.collectionName);
         const result = await collection.find(filter).toArray();
         return result.map(r => this.toCourt(r));
+    }
+
+    async deleteCourt (courtId: string): Promise<void> {
+        const collection = await this.database.getCollection(this.collectionName);
+        const result = await collection.updateOne(
+            { _id: new ObjectID(courtId) },
+            { $set: { beReserved: false } }
+        );
+        if (result.result.nModified !== 1) {
+            throw new IllegalArgumentError('the court is not exist.');
+        }
     }
 
     private toCourt (json: any): Court {

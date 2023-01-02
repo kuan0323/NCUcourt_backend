@@ -8,5 +8,9 @@ export default {
             body('price').isString().required().build(),
             body('type').isString().in(['badminton', 'basketball', 'tennis', 'volleyball']).required().build()
         ])
+    },
+
+    deleteCourtValidator () {
+        return params('id').isObjectID().required().build()
     }
 }

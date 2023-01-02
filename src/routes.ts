@@ -23,12 +23,12 @@ export default (router: Router) => {
 
     router.get('/api/reservations', authAPI.verifyServiceToken, reservationAPI.getReservations);
     router.post('/api/reservations', authAPI.verifyServiceToken, reservationValidator.reservationValidator(), reservationAPI.createReservations);
-    router.delete('/api/reservations/:id', authAPI.verifyServiceToken, reservationAPI.deleteReservations);
+    router.delete('/api/reservations/:id', authAPI.verifyServiceToken, reservationValidator.deleteReservationValidator(), reservationAPI.deleteReservations);
 
     router.get('/api/courts', authAPI.verifyServiceToken, courtAPI.getCourts);
     router.post('/api/courts', authAPI.verifyServiceToken, multer().single('photo'), courtValidator.courtValidator(), courtAPI.createCourts);
     router.put('/api/courts', authAPI.verifyServiceToken, courtAPI.editCourts);
-    router.delete('/api/courts', authAPI.verifyServiceToken, courtAPI.deleteCourts);
+    router.delete('/api/courts/:id', authAPI.verifyServiceToken, courtValidator.deleteCourtValidator(), courtAPI.deleteCourts);
 
     router.get('/api/messages', messageValidator.viewMessageValidator(), authAPI.verifyServiceToken, messageAPI.getMessages);
     router.post('/api/messages', messageValidator.messageValidator(), authAPI.verifyServiceToken, messageAPI.createMessages);
