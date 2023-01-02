@@ -10,15 +10,12 @@ export default {
     // User can view records
     async getReservations(ctx: Koa.Context) {
 
-        const studentId = ctx.query.studentId;
-        const collection = await database.getCollection('reservations');
-
-        if (studentId === "") {
-            const reservations = await collection.find({}).sort({ createdTime: -1 }).toArray();
-            ctx.body = reservations;
-        } else {
-            const reservations = await collection.find({ studentId: studentId }).sort({ createdTime: -1 }).toArray();
-            ctx.body = reservations;
+        try {
+            const userId = APIUtils.getAuthUserId(ctx);
+            const reservation = await reservationManager.viewReservation(userId);
+            ctx.body = reservation;
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
         }
 
     },

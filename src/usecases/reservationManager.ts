@@ -4,12 +4,15 @@ import TypeUtils from "../libs/typeUtils"
 import { ReservationGateway } from "../adapters/data_access/reservationGateway";
 import { AddReservationParameter } from "../adapters/data_access/parameters/addReservationParameter";
 import { SearchReservationParameter } from "../adapters/data_access/parameters/searchReservationParameter";
+import { UserGateway } from "../adapters/data_access/userGateway";
 
 
 @Service()
 export class ReservationManager {
     @Inject('ReservationService')
     private reservationGateway: ReservationGateway;
+    @Inject('UserService')
+    private userGateway: UserGateway;
     private VALID_TIME = ['8:00', '9:00', '10:00', '11:00', '12:00',
     '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
 
@@ -49,5 +52,16 @@ export class ReservationManager {
         }));
 
         return reservation;
+    }
+
+    async viewReservation(userId: string) {
+        const user = await this.userGateway.findById(userId);
+
+        const parameter = (user.role === 'admin' || user.role === 'superAdmin')
+            ? new SearchReservationParameter({})
+            : new SearchReservationParameter({userId})
+
+            const reservations = await this.reservationGateway.find(parameter);
+        return reservations;
     }
 }
