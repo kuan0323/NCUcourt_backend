@@ -30,4 +30,10 @@ export class CourtManager {
         }));
         return court;
     }
+
+    async viewCourt(type: string, name: string) {
+        const courts = await this.courtGateway.find(type, name);
+
+        return courts;
+    }
 }
