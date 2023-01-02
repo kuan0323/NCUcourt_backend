@@ -8,6 +8,15 @@ const userManager = Container.get(UserManager);
 
 export default {
 
+    async getSelfUser (ctx: Koa.Context) {
+        try {
+            const userId = APIUtils.getAuthUserId(ctx);
+            ctx.body = await userManager.getSelfUser(userId);
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
+        }  
+    },
+
     async getUsers(ctx: Koa.Context) {
         try {
             const keyword = APIUtils.getQueryAsString(ctx, 'keyword', null);

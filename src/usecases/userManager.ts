@@ -64,4 +64,8 @@ export class UserManager {
     async searchUsers ({ keyword, role, sortBy }: { keyword: string, role: string, sortBy: string }) {
         return await this.userGateway.find({keyword, role, sortBy});
     }
+
+    async getSelfUser (id: string) {
+        return await this.userGateway.findById(id);
+    }
 }
