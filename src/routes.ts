@@ -9,6 +9,7 @@ import courtValidator from './apis/validators/courtValidator';
 import reservationValidator from './apis/validators/reservationValidator';
 import messageValidator from './apis/validators/messageValidator';
 import authValidator from './apis/validators/authValidator';
+import multer = require('@koa/multer');
 
 export default (router: Router) => {
     router.post('/api/auth/login', authValidator.loginValidator(), authAPI.login);
@@ -17,10 +18,8 @@ export default (router: Router) => {
     router.get('/api/users/profile', authAPI.verifyServiceToken, userAPI.getSelfUser);
     router.get('/api/users', authAPI.verifyServiceToken, userAPI.getUsers);
 
-    // router.get('/api/loginUsers', userAPI.loginUsers);
     router.put('/api/users', authAPI.verifyServiceToken, userAPI.editUsers);
     router.delete('/api/users', authAPI.verifyServiceToken, userAPI.deleteUsers);
-
 
     router.get('/api/reservations', authAPI.verifyServiceToken, reservationAPI.getReservations);
     router.post('/api/reservations', authAPI.verifyServiceToken, reservationValidator.reservationValidator(), reservationAPI.createReservations);
@@ -28,7 +27,7 @@ export default (router: Router) => {
     router.delete('/api/reservations', authAPI.verifyServiceToken, reservationAPI.deleteReservations);
 
     router.get('/api/courts', authAPI.verifyServiceToken, courtAPI.getCourts);
-    router.post('/api/courts', courtValidator.courtValidator(), authAPI.verifyServiceToken, courtAPI.createCourts);
+    router.post('/api/courts', authAPI.verifyServiceToken, multer().single('photo'), courtValidator.courtValidator(), courtAPI.createCourts);
     router.put('/api/courts', authAPI.verifyServiceToken, courtAPI.editCourts);
     router.delete('/api/courts', authAPI.verifyServiceToken, courtAPI.deleteCourts);
 
