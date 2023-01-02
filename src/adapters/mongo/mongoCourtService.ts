@@ -35,6 +35,16 @@ export class MongoCourtService implements CourtGateway {
         return TypeUtils.isNone(result) ? result : this.toCourt(result);
     }
 
+    async find(type: string, name: string): Promise<Court[]> {
+        const filter: any = {};
+        if (TypeUtils.isNotNone(type)) filter.type = type;
+        if (TypeUtils.isNotNone(name)) filter.name = { $regex: `.*${name}.*`, $options: 'i' };
+
+        const collection = await this.database.getCollection(this.collectionName);
+        const result = await collection.find(filter).toArray();
+        return result.map(r => this.toCourt(r));
+    }
+
     private toCourt (json: any): Court {
         return new Court({
             id: json._id,
