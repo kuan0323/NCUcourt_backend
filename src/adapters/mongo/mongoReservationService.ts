@@ -46,6 +46,7 @@ export class MongoReservationService implements ReservationGateway {
                                 .match(filter)
                                 .joinOptional(this.userJoinRule)
                                 .joinOptional(this.courtJoinRule)
+                                .sort({ createdTime: -1 })
                                 .build();
         const results = await collection.aggregate(aggregate).toArray();
         return results.map(result => this.toReservation(result));
@@ -75,6 +76,9 @@ export class MongoReservationService implements ReservationGateway {
             user: new User({
                 id: json.user._id,
                 name: json.user.name,
+                studentId: json.user.studentId,
+                email: json.user.email,
+                phone: json.user.phone
             }),
             date: json.date,
             time: json.time,

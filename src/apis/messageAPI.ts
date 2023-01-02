@@ -8,12 +8,13 @@ const messageManager = Container.get(MessageManager);
 
 export default {
     async getMessages (ctx: Koa.Context) {
-        const courtName = ctx.request.body.courtName;
-        const collection = await database.getCollection('messages');
-        //const messages = await collection.find( {courtName : courtName}).project( {  _id: 0, courtName: 0,}).toArray();
-        const messages = await collection.find({ courtName : courtName }).toArray();
-
-        ctx.body = messages;
+        try {
+            const courtId = APIUtils.getQueryAsString(ctx, 'courtId');
+            const message = await messageManager.viewMessage(courtId);
+            ctx.body = message;
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
+        }
     },
 
     async createMessages (ctx: Koa.Context) {
