@@ -49,6 +49,17 @@ export class MongoCourtService implements CourtGateway {
         return result.map(r => this.toCourt(r));
     }
 
+    async deleteCourt (courtId: string): Promise<void> {
+        const collection = await this.database.getCollection(this.collectionName);
+        const result = await collection.updateOne(
+            { _id: new ObjectID(courtId) },
+            { $set: { beReserved: false } }
+        );
+        if (result.result.nModified !== 1) {
+            throw new IllegalArgumentError('the court is not exist.');
+        }
+    }
+
     async updateCourt(parameter: UpdateCourtParameter): Promise<void>{
         const updates: any = {};
         

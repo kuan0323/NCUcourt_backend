@@ -16,23 +16,22 @@ export default (router: Router) => {
     router.post('/api/register', userValidator.registerValidator(), userAPI.register);
 
     router.get('/api/users/profile', authAPI.verifyServiceToken, userAPI.getSelfUser);
-    router.get('/api/users', authAPI.verifyServiceToken, userAPI.getUsers);
+    router.get('/api/users', authAPI.verifyServiceToken, userValidator.searchUserValidator(), userAPI.getUsers);
 
-    router.put('/api/users', authAPI.verifyServiceToken, userAPI.editUsers);
-    router.delete('/api/users/:id', authAPI.verifyServiceToken, userAPI.deleteUsers);
+    router.delete('/api/users/:id', authAPI.verifyServiceToken, userValidator.deleteUserValidator(), userAPI.deleteUsers);
+    router.put('/api/users', authAPI.verifyServiceToken, userValidator.editUserValidator(), userAPI.editUsers);
 
     router.get('/api/reservations', authAPI.verifyServiceToken, reservationAPI.getReservations);
     router.post('/api/reservations', authAPI.verifyServiceToken, reservationValidator.reservationValidator(), reservationAPI.createReservations);
-    router.delete('/api/reservations/:id', authAPI.verifyServiceToken, reservationAPI.deleteReservations);
+    router.delete('/api/reservations/:id', authAPI.verifyServiceToken, reservationValidator.deleteReservationValidator(), reservationAPI.deleteReservations);
 
-    router.get('/api/courts', authAPI.verifyServiceToken, courtAPI.getCourts);
+    router.get('/api/courts', authAPI.verifyServiceToken, courtValidator.getCourtsValidator(), courtAPI.getCourts);
     router.post('/api/courts', authAPI.verifyServiceToken, multer().single('photo'), courtValidator.courtValidator(), courtAPI.createCourts);
-    router.put('/api/courts/:id', authAPI.verifyServiceToken, multer().single('photo'), courtAPI.editCourts);
-    router.delete('/api/courts', authAPI.verifyServiceToken, courtAPI.deleteCourts);
+    router.put('/api/courts/:id', authAPI.verifyServiceToken, multer().single('photo'), courtValidator.editCourtValidator(), courtAPI.editCourts);
+    router.delete('/api/courts/:id', authAPI.verifyServiceToken, courtValidator.deleteCourtValidator(), courtAPI.deleteCourts);
 
-    router.get('/api/messages', messageValidator.viewMessageValidator(), authAPI.verifyServiceToken, messageAPI.getMessages);
-    router.post('/api/messages', messageValidator.messageValidator(), authAPI.verifyServiceToken, messageAPI.createMessages);
-    router.put('/api/messages', authAPI.verifyServiceToken, messageAPI.editMessages);
+    router.get('/api/messages', authAPI.verifyServiceToken, messageValidator.viewMessageValidator(), messageAPI.getMessages);
+    router.post('/api/messages', authAPI.verifyServiceToken, messageValidator.messageValidator(), messageAPI.createMessages);
     router.delete('/api/messages/:id', authAPI.verifyServiceToken, messageValidator.deleteMessageValidator(), messageAPI.deleteMessages);
 
     // post

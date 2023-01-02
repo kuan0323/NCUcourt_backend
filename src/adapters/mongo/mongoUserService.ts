@@ -96,7 +96,7 @@ export class MongoUserService implements UserGateway {
 
     private toUser (json: any): User {
         return new User({
-            id: json._id,
+            id: json._id.toString(),
             name: json.name,
             studentId: json.studentId,
             email: json.email,
