@@ -10,11 +10,19 @@ export default {
        // get all courts information from the type(ex. basketball) we clicked
        // hint: three type of court (basketball、badminton、volleyball)
         async getCourts(ctx: Koa.Context) {
+            try {
+                const type = APIUtils.getQueryAsString(ctx, 'type', null);
+                const name = APIUtils.getQueryAsString(ctx, 'name', null);
+                const court = await courtManager.viewCourt(type, name);
+                ctx.body = court;
+            } catch (e) {
+                APIUtils.handleError(ctx, e);
+            }
 
-                const collection = await database.getCollection("courts");
-                const courts = await collection.find({ beReserved : true }).toArray();
+                // const collection = await database.getCollection("courts");
+                // const courts = await collection.find({ beReserved : true }).toArray();
 
-                ctx.body = courts;
+                // ctx.body = courts;
         },
         async createCourts(ctx: Koa.Context) {
             try {

@@ -21,4 +21,10 @@ export class CourtManager {
         const court = await this.courtGateway.addCourt(new AddCourtParameter({name, price, type}));
         return court;
     }
+
+    async viewCourt(type: string, name: string) {
+        const courts = await this.courtGateway.find(type, name);
+
+        return courts;
+    }
 }
