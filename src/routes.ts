@@ -16,9 +16,9 @@ export default (router: Router) => {
     router.post('/api/register', userValidator.registerValidator(), userAPI.register);
 
     router.get('/api/users/profile', authAPI.verifyServiceToken, userAPI.getSelfUser);
-    router.get('/api/users', authAPI.verifyServiceToken, userAPI.getUsers);
+    router.get('/api/users', authAPI.verifyServiceToken, userValidator.searchUserValidator(), userAPI.getUsers);
 
-    router.put('/api/users', authAPI.verifyServiceToken, userAPI.editUsers);
+    router.put('/api/users', authAPI.verifyServiceToken, userValidator.editUserValidator(), userAPI.editUsers);
     router.delete('/api/users', authAPI.verifyServiceToken, userAPI.deleteUsers);
 
     router.get('/api/reservations', authAPI.verifyServiceToken, reservationAPI.getReservations);
