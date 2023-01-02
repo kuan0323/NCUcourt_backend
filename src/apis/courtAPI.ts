@@ -3,6 +3,7 @@ import database from '../database/mongoDatabase';
 import Container from 'typedi';
 import { CourtManager } from '../usecases/courtManager';
 import { APIUtils } from './apiUtils';
+import { IllegalArgumentError } from '../exceptions/illegalArgumentError';
 
 const courtManager = Container.get(CourtManager);
 
@@ -29,7 +30,10 @@ export default {
                 const name = APIUtils.getBodyAsString(ctx, 'name');
                 const price = APIUtils.getBodyAsString(ctx, 'price');
                 const type = APIUtils.getBodyAsString(ctx, 'type');
-                const court = await courtManager.addCourt(name, price, type);
+                if (!ctx.file) {
+                    throw new IllegalArgumentError('photo file is required');
+                }
+                const court = await courtManager.addCourt(name, price, type, ctx.file.buffer);
                 ctx.body = court;
             } catch (e) {
                 APIUtils.handleError(ctx, e);

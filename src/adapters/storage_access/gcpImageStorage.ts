@@ -8,11 +8,11 @@ export class GCPImageStorage implements ImageStorage {
 
     private storage: Storage;
     private imageBucket: Bucket;
-    private bucketName = 'ncu-dev-image';
+    private static BUCKET_NAME = 'ncu-dev-image';
 
     constructor () {
         this.storage = new Storage();
-        this.imageBucket = this.storage.bucket(this.bucketName);
+        this.imageBucket = this.storage.bucket(GCPImageStorage.BUCKET_NAME);
     }
 
     upload (name: string, content: Buffer): Promise<string> {
@@ -27,7 +27,7 @@ export class GCPImageStorage implements ImageStorage {
             })
             blobStream.on('finish', () => {
                 const publicUrl = 
-                    `https://storage.googleapis.com/${this.bucketName}/${name}`
+                    `https://storage.googleapis.com/${GCPImageStorage.BUCKET_NAME}/${name}`
                 resolve(publicUrl)
             })
             blobStream.end(content)

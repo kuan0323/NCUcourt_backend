@@ -21,6 +21,7 @@ export class MongoCourtService implements CourtGateway {
             name: parameter.name,
             price: parameter.price,
             type: parameter.type,
+            photo: parameter.photo,
             beReserved: true,
             createdTime: new Date(),
             lastModified: new Date(),
@@ -50,6 +51,7 @@ export class MongoCourtService implements CourtGateway {
             name: json.name,
             price: json.price,
             type: json.type,
+            photo: json.photo,
             beReserved: json.beReserved,
             createdTime: json.createdTime,
             lastModified: json.lastModified

@@ -21,7 +21,7 @@ export default {
         try {
             const keyword = APIUtils.getQueryAsString(ctx, 'keyword', null);
             const role = APIUtils.getQueryAsString(ctx, 'role', null);
-            const sortBy = APIUtils.getQueryAsString(ctx, 'sortby', null);
+            const sortBy = APIUtils.getQueryAsString(ctx, 'sortBy', null);
             ctx.body = await userManager.searchUsers({ keyword, role, sortBy });
         } catch (e) {
             APIUtils.handleError(ctx, e);
