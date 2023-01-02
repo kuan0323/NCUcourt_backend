@@ -29,8 +29,6 @@ export default {
             const courtId = APIUtils.getBodyAsString(ctx, 'courtId');
             const date = APIUtils.getBodyAsString(ctx, 'date');
             const time = APIUtils.getBodyAsString(ctx, 'time');
-            // TODO: the format of date and time should be validate
-            // TODO: the range of date is only valid in the next 7 days
             const reservation = await reservationManager.addReservation(courtId, userId, date, time);
             ctx.body = reservation;
         } catch (e) {

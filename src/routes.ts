@@ -23,7 +23,7 @@ export default (router: Router) => {
 
 
     router.get('/api/reservations', authAPI.verifyServiceToken, reservationAPI.getReservations);
-    router.post('/api/reservations',reservationValidator.reservationValidator(), authAPI.verifyServiceToken, reservationAPI.createReservations);
+    router.post('/api/reservations', authAPI.verifyServiceToken, reservationValidator.reservationValidator(), reservationAPI.createReservations);
     router.put('/api/reservations', authAPI.verifyServiceToken, reservationAPI.editReservations);
     router.delete('/api/reservations', authAPI.verifyServiceToken, reservationAPI.deleteReservations);
 
