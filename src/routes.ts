@@ -33,7 +33,7 @@ export default (router: Router) => {
     router.get('/api/messages', messageValidator.viewMessageValidator(), authAPI.verifyServiceToken, messageAPI.getMessages);
     router.post('/api/messages', messageValidator.messageValidator(), authAPI.verifyServiceToken, messageAPI.createMessages);
     router.put('/api/messages', authAPI.verifyServiceToken, messageAPI.editMessages);
-    router.delete('/api/messages', authAPI.verifyServiceToken, messageAPI.deleteMessages);
+    router.delete('/api/messages/:id', authAPI.verifyServiceToken, messageValidator.deleteMessageValidator(), messageAPI.deleteMessages);
 
     // post
     // put

@@ -1,6 +1,9 @@
 import { Inject, Service } from "typedi";
 import { MessageGateway } from "../adapters/data_access/messageGateway";
 import { AddMessageParameter } from "../adapters/data_access/parameters/addMessageParameter";
+import { IllegalArgumentError } from "../exceptions/illegalArgumentError";
+import { PermissionError } from "../exceptions/permissionError";
+import TypeUtils from "../libs/typeUtils";
 
 @Service()
 export class MessageManager {
@@ -22,5 +25,17 @@ export class MessageManager {
 
     async viewMessage(courtId: string) {
         return await this.messageGateway.findMessages(courtId);
+    }
+
+    async deleteMessage (userId: string, id: string) {
+        const message = await this.messageGateway.findById(id);
+        if (TypeUtils.isNone(message)) {
+            throw new IllegalArgumentError('the message is not exist.');
+        }
+        if (userId === message.user.id) {
+            await this.messageGateway.deleteMessage(id);
+        } else {
+            throw new PermissionError('no permission to delete the message.');
+        }
     }
 }
