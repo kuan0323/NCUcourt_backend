@@ -25,13 +25,13 @@ export default (router: Router) => {
     router.post('/api/reservations', authAPI.verifyServiceToken, reservationValidator.reservationValidator(), reservationAPI.createReservations);
     router.delete('/api/reservations/:id', authAPI.verifyServiceToken, reservationValidator.deleteReservationValidator(), reservationAPI.deleteReservations);
 
-    router.get('/api/courts', authAPI.verifyServiceToken, courtAPI.getCourts);
+    router.get('/api/courts', authAPI.verifyServiceToken, courtValidator.getCourtsValidator(), courtAPI.getCourts);
     router.post('/api/courts', authAPI.verifyServiceToken, multer().single('photo'), courtValidator.courtValidator(), courtAPI.createCourts);
+    router.put('/api/courts/:id', authAPI.verifyServiceToken, multer().single('photo'), courtValidator.editCourtValidator(), courtAPI.editCourts);
     router.delete('/api/courts/:id', authAPI.verifyServiceToken, courtValidator.deleteCourtValidator(), courtAPI.deleteCourts);
-    router.put('/api/courts/:id', authAPI.verifyServiceToken, multer().single('photo'), courtAPI.editCourts);
 
-    router.get('/api/messages', messageValidator.viewMessageValidator(), authAPI.verifyServiceToken, messageAPI.getMessages);
-    router.post('/api/messages', messageValidator.messageValidator(), authAPI.verifyServiceToken, messageAPI.createMessages);
+    router.get('/api/messages', authAPI.verifyServiceToken, messageValidator.viewMessageValidator(), messageAPI.getMessages);
+    router.post('/api/messages', authAPI.verifyServiceToken, messageValidator.messageValidator(), messageAPI.createMessages);
     router.delete('/api/messages/:id', authAPI.verifyServiceToken, messageValidator.deleteMessageValidator(), messageAPI.deleteMessages);
 
     // post
