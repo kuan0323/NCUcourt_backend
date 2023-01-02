@@ -28,7 +28,7 @@ export default (router: Router) => {
 
     router.get('/api/courts', authAPI.verifyServiceToken, courtAPI.getCourts);
     router.post('/api/courts', authAPI.verifyServiceToken, multer().single('photo'), courtValidator.courtValidator(), courtAPI.createCourts);
-    router.put('/api/courts', authAPI.verifyServiceToken, courtAPI.editCourts);
+    router.put('/api/courts/:id', authAPI.verifyServiceToken, multer().single('photo'), courtAPI.editCourts);
     router.delete('/api/courts', authAPI.verifyServiceToken, courtAPI.deleteCourts);
 
     router.get('/api/messages', messageValidator.viewMessageValidator(), authAPI.verifyServiceToken, messageAPI.getMessages);

@@ -6,6 +6,7 @@ import { CourtGateway } from "../adapters/data_access/courtGateway";
 import { AddCourtParameter } from "../adapters/data_access/parameters/addCourtParameters";
 import { ImageStorage } from "../adapters/storage_access/imageStorage";
 import { ImageUtils } from "../libs/imageUtils";
+import { UpdateCourtParameter } from '../adapters/data_access/parameters/updateCourtParameter';
 
 @Service()
 export class CourtManager {
@@ -35,5 +36,22 @@ export class CourtManager {
         const courts = await this.courtGateway.find(type, name);
 
         return courts;
+    }
+
+    async editCourt(id: string,name: string, price: string, type: string, photoContent: Buffer) {
+        if (TypeUtils.isNotNone(photoContent)) {
+            const imageInfo = await ImageUtils.probe(photoContent)
+            const photoUrl = await this.imageStorage.upload(`courts/${shortUUID().generate()}.${imageInfo.format}`, photoContent);
+            await this.courtGateway.updateCourt(new UpdateCourtParameter({
+                id, name, price, type, photo: photoUrl
+            }));
+        } else {
+            await this.courtGateway.updateCourt(new UpdateCourtParameter({
+                id, name, price, type
+            }));
+        }
+
+        
+        
     }
 }

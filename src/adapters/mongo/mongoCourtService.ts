@@ -4,6 +4,10 @@ import { CourtGateway } from "../data_access/courtGateway";
 import TypeUtils from "../../libs/typeUtils";
 import { AddCourtParameter } from "../data_access/parameters/addCourtParameters";
 import { Service } from "typedi";
+import { UpdateUserParameter } from "../data_access/parameters/updateUserParameter";
+import { UpdateCourtParameter } from "../data_access/parameters/updateCourtParameter";
+import { ObjectID, ObjectId } from "mongodb";
+import { IllegalArgumentError } from "../../exceptions/illegalArgumentError";
 
 @Service()
 @Service('CourtService')
@@ -43,6 +47,23 @@ export class MongoCourtService implements CourtGateway {
         const collection = await this.database.getCollection(this.collectionName);
         const result = await collection.find(filter).toArray();
         return result.map(r => this.toCourt(r));
+    }
+
+    async updateCourt(parameter: UpdateCourtParameter): Promise<void>{
+        const updates: any = {};
+        
+        if (TypeUtils.isNone(parameter.id)) {
+            throw new IllegalArgumentError('court id should be given');
+        }
+        if (TypeUtils.isNotNone(parameter.name)) updates.name = parameter.name;
+        if (TypeUtils.isNotNone(parameter.price)) updates.price = parameter.price;
+        if (TypeUtils.isNotNone(parameter.type)) updates.type = parameter.type;
+        if (TypeUtils.isNotNone(parameter.photo)) updates.photo = parameter.photo;
+        updates.lastModified = new Date();
+        const collection = await this.database.getCollection(this.collectionName);
+        await collection.updateOne({ _id: new ObjectID(parameter.id) }, {
+            $set: updates
+        });
     }
 
     private toCourt (json: any): Court {
