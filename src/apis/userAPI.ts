@@ -1,4 +1,5 @@
 import * as Koa from 'koa';
+import { ObjectID } from 'mongodb';
 import Container from 'typedi';
 import database from '../database/mongoDatabase';
 import { UserManager } from '../usecases/userManager';
@@ -61,20 +62,15 @@ export default {
 
     // 
     async deleteUsers(ctx: Koa.Context) {
-        const userId = ctx.state.user;
-        const collection = await database.getCollection("users");
-        const objectId = require('mongodb').ObjectId;
-
-        // check if the target exist
-        if ((await collection.find({ _id: objectId(userId) }).toArray()).length === 0) {
-            ctx.body = "Warning: Can't find the user!";
-        } else {
-            await collection.deleteOne({ _id: objectId(userId) });
-            ctx.body = "The user had been deleted";
+        try {
+            const userId = APIUtils.getAuthUserId(ctx);
+            const deleteId = APIUtils.getParamsAsString(ctx, 'id');
+            await userManager.deleteUser(userId, deleteId);
+            ctx.body = { message: "The user had been deleted" };
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
         }
     }
-
-
 
 }
 

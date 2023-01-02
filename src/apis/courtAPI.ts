@@ -48,32 +48,6 @@ export default {
             } catch (e) {
                 APIUtils.handleError(ctx, e);
             }
-
-            // const photo = ctx.request.body.photo;
-            // const price = ctx.request.body.price;
-            // //const beReserved = ctx.request.body.beReserved;
-            // const type = ctx.request.body.type;
-
-            // const name = ctx.request.body.name;
-            // const collection = await database.getCollection("courts");
-            // ctx.request.body.lastModified = new Date();
-            // const lastModified = ctx.request.body.lastModified;
-
-            //   //check if the target exist
-            // if ((await collection.find({ name: name }).toArray()).length ===0) {
-            //     ctx.body = "Warning: Can't find the court!";
-            // } else {
-            //     await collection.updateOne({ name: name },{
-            //         $set: {
-            //             photo: photo,
-            //             price: price,
-            //             beReserved: true,
-            //             type: type,
-            //             lastModified: lastModified,
-            //         },
-            //     });
-            //     ctx.body = await collection.find({ name: name }).toArray();
-            // }
     },
 
 	async deleteCourts(ctx: Koa.Context) {

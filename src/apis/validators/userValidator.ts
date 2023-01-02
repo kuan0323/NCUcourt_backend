@@ -31,5 +31,9 @@ export default {
             body('newPassword').isString().optional().build(),
             body('phone').isString().optional().build(),
         ]);
+    },
+
+    deleteUserValidator () {
+        return params('id').isObjectID().required().build()
     }
 }

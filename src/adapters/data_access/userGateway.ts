@@ -10,4 +10,5 @@ export interface UserGateway {
     find (parameter: SearchUserParameter): Promise<User[]>;
     addUser (parameter: AddUserParameter): Promise<User>;
     updateUser (parameter: UpdateUserParameter): Promise<void>;
+    deleteUser (deleteId: string): Promise<void>;
 }
