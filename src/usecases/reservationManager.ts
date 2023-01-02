@@ -5,6 +5,7 @@ import { ReservationGateway } from "../adapters/data_access/reservationGateway";
 import { AddReservationParameter } from "../adapters/data_access/parameters/addReservationParameter";
 import { SearchReservationParameter } from "../adapters/data_access/parameters/searchReservationParameter";
 import { UserGateway } from "../adapters/data_access/userGateway";
+import { PermissionError } from "../exceptions/permissionError";
 
 
 @Service()
@@ -63,5 +64,20 @@ export class ReservationManager {
 
             const reservations = await this.reservationGateway.find(parameter);
         return reservations;
+    }
+
+    async deleteReservation (userId: string, reservationId: string) {
+        const user = await this.userGateway.findById(userId);
+        const reservation = await this.reservationGateway.findById(reservationId);
+
+        if (TypeUtils.isNone(reservation)) {
+            throw new IllegalArgumentError('the reservation is not exist.')
+        }
+        
+        if (user.role !== 'admin' && user.role !== 'superAdmin'
+            && user.id !== reservation.user.id) {
+            throw new PermissionError('no permission to delete this reservation.')
+        }
+        await this.reservationGateway.deleteReservation(reservationId);
     }
 }

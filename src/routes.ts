@@ -23,7 +23,7 @@ export default (router: Router) => {
 
     router.get('/api/reservations', authAPI.verifyServiceToken, reservationAPI.getReservations);
     router.post('/api/reservations', authAPI.verifyServiceToken, reservationValidator.reservationValidator(), reservationAPI.createReservations);
-    router.delete('/api/reservations', authAPI.verifyServiceToken, reservationAPI.deleteReservations);
+    router.delete('/api/reservations/:id', authAPI.verifyServiceToken, reservationAPI.deleteReservations);
 
     router.get('/api/courts', authAPI.verifyServiceToken, courtAPI.getCourts);
     router.post('/api/courts', authAPI.verifyServiceToken, multer().single('photo'), courtValidator.courtValidator(), courtAPI.createCourts);

@@ -34,19 +34,13 @@ export default {
     },
 
     async deleteReservations(ctx: Koa.Context) {
-
-        //courtNum = ctx.query.courtNmae; 刪除的球場編號
-        const courtName = ctx.query.courtName;
-        const collection = await database.getCollection("reservations");
-
-        if (
-            (await collection.find({ courtName: courtName }).toArray()).length === 0
-        ) {
-            ctx.body = "Warning: Can't find the reservation!";
-        } else {
-            await collection.deleteOne({ courtName: courtName });
-            ctx.body = "The reservation had been deleted";
+        try {
+            const userId = APIUtils.getAuthUserId(ctx);
+            const reservationId = APIUtils.getParamsAsString(ctx, 'id');
+            await reservationManager.deleteReservation(userId, reservationId);
+            ctx.body = { message: 'delete reservation successfully.' };
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
         }
-
     }
 }

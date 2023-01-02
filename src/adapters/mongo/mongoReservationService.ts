@@ -32,6 +32,18 @@ export class MongoReservationService implements ReservationGateway {
     constructor (database: MongoDatabase) {
         this.database = database;
     }
+    
+    async findById (id: string): Promise<Reservation> {
+        const collection = await this.database.getCollection(this.collectionName);
+        const aggregate = new AggregateBuilder()
+                                .match({ _id: new ObjectID(id) })
+                                .joinOptional(this.userJoinRule)
+                                .joinOptional(this.courtJoinRule)
+                                .sort({ createdTime: -1 })
+                                .build();
+        const results = await collection.aggregate(aggregate).toArray();
+        return (results.length === 0) ? null : this.toReservation(results[0]);
+    }
 
     async find (parameter: SearchReservationParameter): Promise<Reservation[]> {
         const filter: any = {};
@@ -63,6 +75,11 @@ export class MongoReservationService implements ReservationGateway {
         });
         
         return (await this.find(new SearchReservationParameter({ id: result.ops[0]._id })))[0];
+    }
+
+    async deleteReservation (id: string): Promise<void> {
+        const collection = await this.database.getCollection(this.collectionName);
+        await collection.deleteOne({ _id: new ObjectID(id) });
     }
 
     private toReservation (json: any): Reservation {
