@@ -8,6 +8,7 @@ export class User {
     public phone: string;
     public role: string;
     public createdTime: Date;
+    public lastModified: Date;
 
     constructor (init: Partial<User>) {
         if (TypeUtils.isNotNone(init.id)) this.id = init.id;
@@ -17,5 +18,6 @@ export class User {
         if (TypeUtils.isNotNone(init.phone)) this.phone = init.phone;
         if (TypeUtils.isNotNone(init.role)) this.role = init.role;
         if (TypeUtils.isNotNone(init.createdTime)) this.createdTime = init.createdTime;
+        if (TypeUtils.isNotNone(init.lastModified)) this.lastModified = init.lastModified;
     }
 }

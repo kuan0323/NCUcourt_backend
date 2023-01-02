@@ -48,6 +48,7 @@ export class MongoUserService implements UserGateway {
             password: parameter.password,
             phone: parameter.phone,
             createdTime: new Date(),
+            lastModified: new Date(),
             role: parameter.role
         });
         return this.toUser(result.ops[0]);
@@ -93,7 +94,8 @@ export class MongoUserService implements UserGateway {
             email: json.email,
             phone: json.phone,
             role: json.role,
-            createdTime: json.createdTime
+            createdTime: json.createdTime,
+            lastModified: json.lastModified
         });
     }
 }
