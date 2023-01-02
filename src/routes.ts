@@ -32,8 +32,8 @@ export default (router: Router) => {
     router.put('/api/courts', authAPI.verifyServiceToken, courtAPI.editCourts);
     router.delete('/api/courts', authAPI.verifyServiceToken, courtAPI.deleteCourts);
 
-    router.get('/api/messages', authAPI.verifyServiceToken, messageAPI.getMessages);
-    router.post('/api/messages', messageValidator.reservationValidator(), authAPI.verifyServiceToken, messageAPI.createMessages);
+    router.get('/api/messages', messageValidator.viewMessageValidator(), authAPI.verifyServiceToken, messageAPI.getMessages);
+    router.post('/api/messages', messageValidator.messageValidator(), authAPI.verifyServiceToken, messageAPI.createMessages);
     router.put('/api/messages', authAPI.verifyServiceToken, messageAPI.editMessages);
     router.delete('/api/messages', authAPI.verifyServiceToken, messageAPI.deleteMessages);
 
