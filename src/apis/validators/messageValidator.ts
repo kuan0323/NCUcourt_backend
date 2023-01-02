@@ -14,5 +14,9 @@ export default {
             body('courtId').isObjectID().required().build(),
             body('content').isString().required().build(),
         ])
+    },
+
+    deleteMessageValidator () {
+        return params('id').isObjectID().required().build()
     }
 }

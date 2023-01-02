@@ -48,14 +48,13 @@ export default {
     },
 
     async deleteMessages (ctx: Koa.Context) {
-        const messageId = ctx.request.body.messageId;
-        const collection = await database.getCollection('messages');
-
-        if((await collection.find({ messageId : messageId}).toArray()).length === 0) {
-            ctx.body = "Warning:Can't find the message!";
-        } else {
-            await collection.deleteOne({messageId : messageId});
-            ctx.body = "The message has been deleted.";
+        try {
+            const userId = APIUtils.getAuthUserId(ctx);
+            const messageId = APIUtils.getParamsAsString(ctx, 'id');
+            await messageManager.deleteMessage(userId, messageId);
+            ctx.body = { message: 'the message deleted succesfully.' };
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
         }
     } 
 }
