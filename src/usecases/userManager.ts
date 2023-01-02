@@ -4,6 +4,7 @@ import { UpdateUserParameter } from "../adapters/data_access/parameters/updateUs
 import { UserGateway } from "../adapters/data_access/userGateway";
 import { User } from "../entities/user";
 import { IllegalArgumentError } from "../exceptions/illegalArgumentError";
+import { NotExistError } from "../exceptions/notExistError";
 import { PermissionError } from "../exceptions/permissionError";
 import TypeUtils from "../libs/typeUtils";
 const crypto = require('crypto');
@@ -67,5 +68,17 @@ export class UserManager {
 
     async getSelfUser (id: string) {
         return await this.userGateway.findById(id);
+    }
+
+    async deleteUser(userId: string, deleteId: string) {
+        const user = await this.userGateway.findById(userId);
+        if (user.role !== 'admin' && user.role !== 'superAdmin') {
+            throw new PermissionError('no permission to delete this user.')
+        }
+        const deleteUser = await this.userGateway.findById(deleteId);
+        if (TypeUtils.isNone(deleteUser)) {
+            throw new NotExistError('The user isn\'t exist')
+        }
+        await this.userGateway.deleteUser(deleteId);
     }
 }
