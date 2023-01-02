@@ -88,9 +88,9 @@ export class MongoUserService implements UserGateway {
 
     async deleteUser(deleteId: string): Promise<void> {
         const collection = await this.database.getCollection(this.collectionName);
-        await collection.updateOne({ _id: deleteId }, {
+        await collection.updateOne({ _id: new ObjectID(deleteId) }, {
             $set: 
-                {'collection.role': 'deleted'}
+                {'role': 'deleted'}
         });
     }
 
