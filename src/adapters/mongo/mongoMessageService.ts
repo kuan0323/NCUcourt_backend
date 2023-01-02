@@ -2,10 +2,8 @@ import { ObjectID } from "mongodb";
 import { Service } from "typedi";
 import AggregateBuilder, { AggregateJoinRule } from "../../aggregateBuilder";
 import { MongoDatabase } from "../../database/mongoDatabase";
-import { Court } from "../../entities/court";
 import { Message } from "../../entities/message";
 import { User } from "../../entities/user";
-import TypeUtils from "../../libs/typeUtils";
 import { MessageGateway } from "../data_access/messageGateway";
 import { AddMessageParameter } from "../data_access/parameters/addMessageParameter";
 
@@ -42,12 +40,25 @@ export class MongoMessageService implements MessageGateway {
         return this.toMessage(results[0]);
     }
 
+    async findMessages (courtId: string): Promise<Message[]> {
+        const collection = await this.database.getCollection(this.collectionName);
+
+        const aggregate = new AggregateBuilder()
+                                .match({ courtId: new ObjectID(courtId) })
+                                .joinOptional(this.userJoinRule)
+                                .build();
+
+        const results = await collection.aggregate(aggregate).toArray();
+        return results.map(r => this.toMessage(r));
+    }
+
     private toMessage (json: any): Message {
         return new Message({
             id: json._id,
             user: new User({
                 id: json.user._id,
                 name: json.user.name,
+                studentId: json.user.studentId
             }),
             courtId: json.courtId,
             content: json.content,

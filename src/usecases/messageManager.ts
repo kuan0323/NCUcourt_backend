@@ -19,4 +19,8 @@ export class MessageManager {
         }));
         return message;
     }
+
+    async viewMessage(courtId: string) {
+        return await this.messageGateway.findMessages(courtId);
+    }
 }
