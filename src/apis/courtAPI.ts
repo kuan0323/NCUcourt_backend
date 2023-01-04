@@ -1,8 +1,8 @@
-import * as Koa from 'koa';
-import database from '../database/mongoDatabase';
-import Container from 'typedi';
-import { CourtManager } from '../usecases/courtManager';
-import { APIUtils } from './apiUtils';
+import * as Koa from "koa";
+import database from "../database/mongoDatabase";
+import Container from "typedi";
+import { CourtManager } from "../usecases/courtManager";
+import { APIUtils } from "./apiUtils";
 
 const courtManager = Container.get(CourtManager);
 
@@ -12,32 +12,30 @@ export default {
   async getCourts(ctx: Koa.Context) {
     const type_keyword = ctx.query.type_keyword;
     const collection = await database.getCollection("courts");
-    const courts = await collection
-      .find({ court_type: type_keyword })
-      .toArray();
+    const courts = await collection.find({ type: type_keyword }).toArray();
     ctx.body = courts;
   },
   async createCourts(ctx: Koa.Context) {
-    const court_name = ctx.request.body.court_name;
-    const court_photo = ctx.request.body.court_photo;
-    const court_price = ctx.request.body.court_price;
+    const name = ctx.request.body.name;
+    const photo = ctx.request.body.photo;
+    const price = ctx.request.body.price;
     const court_status = ctx.request.body.court_status;
-    const court_type = ctx.request.body.court_type;
+    const type = ctx.request.body.type;
+    const beReserved = ctx.request.body.beReserved;
 
     ctx.request.body.createdTime = new Date();
     const createdTime = ctx.request.body.createdTime;
     const collection = await database.getCollection("courts");
 
     //check if name is used
-    if (
-      (await collection.find({ court_name: court_name }).toArray()).length === 0
-    ) {
+    if ((await collection.find({ name: name }).toArray()).length === 0) {
       const result = await collection.insertOne({
-        court_name: court_name,
-        court_photo: court_photo,
-        court_price: court_price,
+        name: name,
+        photo: photo,
+        price: price,
         court_status: court_status,
-        court_type: court_type,
+        type: type,
+        beReserved: beReserved,
         createdTime: createdTime,
       });
       ctx.body = result.ops[0];
@@ -47,10 +45,11 @@ export default {
   },
 
   async editCourts(ctx: Koa.Context) {
-    const court_photo = ctx.request.body.court_photo;
-    const court_price = ctx.request.body.court_price;
+    const photo = ctx.request.body.photo;
+    const price = ctx.request.body.price;
     const court_status = ctx.request.body.court_status;
-    const court_type = ctx.request.body.court_type;
+    const type = ctx.request.body.type;
+    const beReserved = ctx.request.body.beReserved;
 
     const name_keyword = ctx.query.name_keyword;
     const collection = await database.getCollection("courts");
@@ -59,24 +58,24 @@ export default {
 
     //check if the target exist
     if (
-      (await collection.find({ court_name: name_keyword }).toArray()).length ===
-      0
+      (await collection.find({ name: name_keyword }).toArray()).length === 0
     ) {
       ctx.body = "Warning: Can't find the court!";
     } else {
       const courts = await collection.updateOne(
-        { court_name: name_keyword },
+        { name: name_keyword },
         {
           $set: {
-            court_photo: court_photo,
-            court_price: court_price,
+            photo: photo,
+            price: price,
             court_status: court_status,
-            court_type: court_type,
+            type: type,
+            beReserved: beReserved,
             lastModified: lastModified,
           },
         }
       );
-      ctx.body = await collection.find({ court_name: name_keyword }).toArray();
+      ctx.body = await collection.find({ name: name_keyword }).toArray();
     }
   },
 
@@ -86,14 +85,12 @@ export default {
 
     //check if the target exist
     if (
-      (await collection.find({ court_name: name_keyword }).toArray()).length ===
-      0
+      (await collection.find({ name: name_keyword }).toArray()).length === 0
     ) {
       ctx.body = "Warning: Can't find the court!";
     } else {
-      const deleting = await collection.deleteOne({ court_name: name_keyword });
+      const deleting = await collection.deleteOne({ name: name_keyword });
       ctx.body = "The court had been deleted";
     }
   },
 };
-
