@@ -43,6 +43,7 @@ export class MongoCourtService implements CourtGateway {
         const filter: any = {};
         if (TypeUtils.isNotNone(type)) filter.type = type;
         if (TypeUtils.isNotNone(name)) filter.name = { $regex: `.*${name}.*`, $options: 'i' };
+        filter.beReserved = true;
 
         const collection = await this.database.getCollection(this.collectionName);
         const result = await collection.find(filter).toArray();
