@@ -1,6 +1,6 @@
 import { ObjectID } from "mongodb";
 import { Service } from "typedi";
-import AggregateBuilder, { AggregateJoinRule } from "../../aggregateBuilder";
+import AggregateBuilder, { AggregateJoinRule } from "./aggregateBuilder";
 import { MongoDatabase } from "../../database/mongoDatabase";
 import { Court } from "../../entities/court";
 import { Reservation } from "../../entities/reservation";

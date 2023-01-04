@@ -1,4 +1,4 @@
-import { IllegalArgumentError } from "./exceptions/illegalArgumentError";
+import { IllegalArgumentError } from "../../exceptions/illegalArgumentError";
 // import { MongoCollectionType } from "./mongoCollection";
 
 export class AggregateJoinRule {
