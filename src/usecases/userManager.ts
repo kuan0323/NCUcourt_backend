@@ -40,6 +40,9 @@ export class UserManager {
 
     async editUser ({id, name, email, oldPassword, newPassword, phone}
         : {id: string, name: string, email: string, oldPassword: string, newPassword: string, phone: string}) {
+
+        this.validateEditUserField(name, email, oldPassword, newPassword, phone);
+
         await this.userGateway.updateUser(new UpdateUserParameter({
             id, name, email, phone
         }));
@@ -80,5 +83,11 @@ export class UserManager {
             throw new NotExistError('The user isn\'t exist')
         }
         await this.userGateway.deleteUser(deleteId);
+    }
+
+    private validateEditUserField (name: string, email: string, oldPassword: string, newPassword: string, phone: string) {
+        if (name === '' || email === '' || oldPassword === '' || newPassword === '' || phone === '') {
+            throw new IllegalArgumentError('name, email, oldPassword, newPassword and phone should not be empty string.');
+        }
     }
 }
