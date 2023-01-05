@@ -41,7 +41,7 @@ export class ReservationManager {
         }
 
         const existReservation = await this.reservationGateway.find(new SearchReservationParameter({
-            courtId, userId, date, time
+            courtId, date, time
         }));
 
         if (existReservation.length !== 0) {
