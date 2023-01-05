@@ -12,7 +12,20 @@ export default {
 
         try {
             const userId = APIUtils.getAuthUserId(ctx);
-            const reservation = await reservationManager.viewReservation(userId);
+            const courtId = APIUtils.getQueryAsString(ctx, 'courtId', null);
+            const date = APIUtils.getQueryAsString(ctx, 'date', null);
+            const time = APIUtils.getQueryAsString(ctx, 'time', null);
+            const reservation = await reservationManager.viewReservation({userId, courtId, date, time});
+            ctx.body = reservation;
+        } catch (e) {
+            APIUtils.handleError(ctx, e);
+        }
+
+    },
+
+    async getAllReservations(ctx: Koa.Context) {
+        try {
+            const reservation = await reservationManager.viewAllReservation();
             ctx.body = reservation;
         } catch (e) {
             APIUtils.handleError(ctx, e);

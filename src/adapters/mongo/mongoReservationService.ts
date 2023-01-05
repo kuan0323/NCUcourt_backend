@@ -32,6 +32,17 @@ export class MongoReservationService implements ReservationGateway {
     constructor (database: MongoDatabase) {
         this.database = database;
     }
+
+    async findAllReservation(): Promise<Reservation[]> {
+        const collection = await this.database.getCollection(this.collectionName);
+        const aggregate = new AggregateBuilder()
+                                .joinOptional(this.userJoinRule)
+                                .joinOptional(this.courtJoinRule)
+                                .sort({ createdTime: -1 })
+                                .build();
+        const results = await collection.aggregate(aggregate).toArray();
+        return results.map(result => this.toReservation(result));
+    }
     
     async findById (id: string): Promise<Reservation> {
         const collection = await this.database.getCollection(this.collectionName);
@@ -52,7 +63,7 @@ export class MongoReservationService implements ReservationGateway {
         if (TypeUtils.isNotNone(parameter.userId)) filter.userId = new ObjectID(parameter.userId);
         if (TypeUtils.isNotNone(parameter.date)) filter.date = parameter.date;
         if (TypeUtils.isNotNone(parameter.time)) filter.time = parameter.time;
-
+        
         const collection = await this.database.getCollection(this.collectionName);
         const aggregate = new AggregateBuilder()
                                 .match(filter)
