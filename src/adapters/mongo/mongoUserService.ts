@@ -73,7 +73,12 @@ export class MongoUserService implements UserGateway {
 
     async find (parameter: SearchUserParameter): Promise<User[]> {
         const filter: any = {};
-        if (TypeUtils.isNotNone(parameter.keyword)) filter.name = { $regex: `.*${parameter.keyword}.*`, $options: 'i' };
+        if (TypeUtils.isNotNone(parameter.keyword)) {
+            filter.$or = [
+                { name: { $regex: `.*${parameter.keyword}.*`, $options: 'i' } },
+                { studentId: { $regex: `.*${parameter.keyword}.*`, $options: 'i' } },
+            ]
+        }
         if (TypeUtils.isNotNone(parameter.role)) filter.role = parameter.role;
         const sort = TypeUtils.isNotNone(parameter.sortBy)
                         ? { [parameter.sortBy]: -1 }
