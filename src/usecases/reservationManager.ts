@@ -59,18 +59,16 @@ export class ReservationManager {
         const user = await this.userGateway.findById(userId);
 
         const parameter = (user.role === 'admin' || user.role === 'superAdmin')
-            ? new SearchReservationParameter({})
-            : new SearchReservationParameter({date, time, courtId})
+            ? new SearchReservationParameter({date, time, courtId})
+            : new SearchReservationParameter({userId, date, time, courtId})
         
         const reservations = await this.reservationGateway.find(parameter);
         
         return reservations;
     }
 
-    async viewAllReservation() {
-        const reservations = await this.reservationGateway.findAllReservation();
-        console.log(reservations);
-        
+    async viewAllReservation({courtId, date, time}: {courtId: string, date: string, time: string}) {
+        const reservations = await this.reservationGateway.find(new SearchReservationParameter({date, time, courtId}));
         return reservations;
     }
 

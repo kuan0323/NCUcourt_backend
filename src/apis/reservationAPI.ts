@@ -7,7 +7,6 @@ import { APIUtils } from './apiUtils';
 const reservationManager = Container.get(ReservationManager);
 
 export default {
-    // User can view records
     async getReservations(ctx: Koa.Context) {
 
         try {
@@ -25,7 +24,10 @@ export default {
 
     async getAllReservations(ctx: Koa.Context) {
         try {
-            const reservation = await reservationManager.viewAllReservation();
+            const courtId = APIUtils.getQueryAsString(ctx, 'courtId', null);
+            const date = APIUtils.getQueryAsString(ctx, 'date', null);
+            const time = APIUtils.getQueryAsString(ctx, 'time', null);
+            const reservation = await reservationManager.viewAllReservation({courtId, date, time});
             ctx.body = reservation;
         } catch (e) {
             APIUtils.handleError(ctx, e);
