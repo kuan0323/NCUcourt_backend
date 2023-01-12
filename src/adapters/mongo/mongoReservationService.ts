@@ -59,8 +59,8 @@ export class MongoReservationService implements ReservationGateway {
     async find (parameter: SearchReservationParameter): Promise<Reservation[]> {
         const filter: any = {};
         if (TypeUtils.isNotNone(parameter.id)) filter._id = new ObjectID(parameter.id);
-        if (TypeUtils.isNotNone(parameter.courtId)) filter.court._id = new ObjectID(parameter.courtId);
-        if (TypeUtils.isNotNone(parameter.userId)) filter.user._id = new ObjectID(parameter.userId);
+        if (TypeUtils.isNotNone(parameter.courtId)) filter.courtId = new ObjectID(parameter.courtId);
+        if (TypeUtils.isNotNone(parameter.userId)) filter.userId = new ObjectID(parameter.userId);
         if (TypeUtils.isNotNone(parameter.date)) filter.date = parameter.date;
         if (TypeUtils.isNotNone(parameter.time)) filter.time = parameter.time;
         if (TypeUtils.isNotNone(parameter.keyword)) {
