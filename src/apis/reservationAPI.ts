@@ -14,7 +14,8 @@ export default {
             const courtId = APIUtils.getQueryAsString(ctx, 'courtId', null);
             const date = APIUtils.getQueryAsString(ctx, 'date', null);
             const time = APIUtils.getQueryAsString(ctx, 'time', null);
-            const reservation = await reservationManager.viewReservation({userId, courtId, date, time});
+            const keyword = APIUtils.getQueryAsString(ctx, 'keyword', null);
+            const reservation = await reservationManager.viewReservation({userId, courtId, date, time, keyword});
             ctx.body = reservation;
         } catch (e) {
             APIUtils.handleError(ctx, e);

@@ -59,20 +59,38 @@ export class MongoReservationService implements ReservationGateway {
     async find (parameter: SearchReservationParameter): Promise<Reservation[]> {
         const filter: any = {};
         if (TypeUtils.isNotNone(parameter.id)) filter._id = new ObjectID(parameter.id);
-        if (TypeUtils.isNotNone(parameter.courtId)) filter.courtId = new ObjectID(parameter.courtId);
-        if (TypeUtils.isNotNone(parameter.userId)) filter.userId = new ObjectID(parameter.userId);
+        if (TypeUtils.isNotNone(parameter.courtId)) filter.court._id = new ObjectID(parameter.courtId);
+        if (TypeUtils.isNotNone(parameter.userId)) filter.user._id = new ObjectID(parameter.userId);
         if (TypeUtils.isNotNone(parameter.date)) filter.date = parameter.date;
         if (TypeUtils.isNotNone(parameter.time)) filter.time = parameter.time;
-        
+        if (TypeUtils.isNotNone(parameter.keyword)) {
+            filter.$or = [
+                { 'court.name': { $regex: `.*${parameter.keyword}.*`, $options: 'i' } },
+                { 'user.name': { $regex: `.*${parameter.keyword}.*`, $options: 'i' } },
+            ]
+        }
         const collection = await this.database.getCollection(this.collectionName);
         const aggregate = new AggregateBuilder()
-                                .match(filter)
                                 .joinOptional(this.userJoinRule)
                                 .joinOptional(this.courtJoinRule)
+                                .match(filter)
                                 .sort({ createdTime: -1 })
                                 .build();
         const results = await collection.aggregate(aggregate).toArray();
         return results.map(result => this.toReservation(result));
+        // const keywordFilter: any = {};
+        // if (TypeUtils.isNotNone(parameter.keyword)) {
+        //     keywordFilter.$or = [
+        //         { 'court.name': {name: { $regex: `.*${parameter.keyword}.*`, $options: 'i' }} },
+        //         { 'user.name': {name: { $regex: `.*${parameter.keyword}.*`, $options: 'i' }} },
+        //     ]
+        //     console.log(123);
+        //     const keywordResults = await collection.aggregate(aggregate).match(keywordFilter).toArray();
+        //     return keywordResults.map(result => this.toReservation(result));
+        // } else {
+        //     const results = await collection.aggregate(aggregate).toArray();
+        //     return results.map(result => this.toReservation(result));
+        // }
     }
 
     async addReservation(paramater: AddReservationParameter): Promise<Reservation> {
